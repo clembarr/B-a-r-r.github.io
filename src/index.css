@@ -92,6 +92,7 @@ layer(base);
   --color-quaternary: #3D3E3C;
   --color-quinary: #4f4f4f;
   --color-mobile-navbar: rgba(244, 244, 244, 0.95);
+  --color-link: #36bbf4;
 
   --color-surface: #f4f4f4;
   --color-surface-elevated: #FFFFFF;
@@ -117,6 +118,7 @@ layer(base);
   --color-tertiary: #7CFFC4;
   --color-quaternary: #E5E5E5;
   --color-quinary: #3c3c3c;
+  --color-link: #36bbf4;
 
   --color-mobile-navbar: rgba(26, 26, 31, 0.95);
 
@@ -184,6 +186,14 @@ strong {
   margin: 0;
   padding: 0;
   color: var(--color-tertiary); 
+}
+
+link {
+  margin: 0;
+  padding: 0;
+  color: var(--color-link);
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 button {
@@ -751,4 +761,179 @@ input:focus, textarea:focus {
 }
 .pill-tooltip:hover::after {
   opacity: 1;
+}
+
+/* ───────────────────────────────────────────────
+   Prism.js — VS Code "Dark Modern" theme
+   Always dark regardless of the app's light/dark
+   theme, matching VS Code's default dark palette.
+
+   All token rules are scoped under #article-content
+   to beat Tailwind Typography specificity.
+   ─────────────────────────────────────────────── */
+
+/* ── Inline code (not inside code blocks) ── */
+#article-content code:not(pre code) {
+  color: #d4d4d4;
+  background: #1e1e1e;
+  padding: 0.15em 0.4em;
+  border-radius: 0.25rem;
+  font-size: 80%;
+  font-family: ui-monospace, 'Cascadia Code', 'Fira Code', 'JetBrains Mono', Consolas, monospace;
+}
+
+/* ── Container ──
+   The <pre> gets .not-prose so Typography won't touch it.
+   Default text color is #9cdcfe (cyan) — the VS Code color for
+   variables/identifiers, which Prism leaves as bare text. */
+#article-content pre[class*="language-"] {
+  background: #1e1e1e;
+  color: #9cdcfe;
+  font-family: ui-monospace, 'Cascadia Code', 'Fira Code', 'JetBrains Mono', Consolas, monospace;
+  font-size: 0.7em;
+  line-height: 1.7;
+  tab-size: 2;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  hyphens: none;
+  overflow-x: auto;
+  padding: 1.2em 1.4em;
+  margin: 1.5em 0;
+  border-radius: 0.5rem;
+  border: 1px solid #2d2d2d;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+#article-content pre[class*="language-"] code {
+  background: none;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  font-size: inherit;
+  color: inherit;
+  white-space: inherit;
+}
+
+/* ── Indentation guide lines (per-line, applied via JS inline styles) ── */
+#article-content .code-line {
+  display: inline-block;
+  width: 100%;
+}
+
+/* ── Declaration keywords: const, let, var, function, class ── (blue) */
+#article-content .token.keyword {
+  color: #569cd6;
+}
+/* ── Control-flow keywords: if, return, else, import, export… ── (magenta) */
+#article-content .token.keyword.control-flow {
+  color: #c586c0;
+}
+
+/* ── Functions & method calls ── (yellow) */
+#article-content .token.function,
+#article-content .token.function-variable {
+  color: #dcdcaa;
+}
+
+/* ── Built-in types: string, number, boolean… ── (green) */
+#article-content .token.builtin,
+#article-content .token.class-name {
+  color: #4ec9b0;
+}
+
+/* ── Strings ── (orange) */
+#article-content .token.string,
+#article-content .token.template-string {
+  color: #ce9178;
+}
+#article-content .token.interpolation {
+  color: #9cdcfe;
+}
+
+/* ── Numbers ── (light green) */
+#article-content .token.number {
+  color: #b5cea8;
+}
+
+/* ── Booleans & null ── (blue) */
+#article-content .token.boolean,
+#article-content .token.constant {
+  color: #569cd6;
+}
+
+/* ── Comments & doc-blocks ── (green, italic) */
+#article-content .token.comment,
+#article-content .token.prolog,
+#article-content .token.doctype,
+#article-content .token.cdata {
+  color: #6a9955;
+  font-style: italic;
+}
+
+/* ── Operators: =, =>, ===, +, -, ? ── */
+#article-content .token.operator {
+  color: #d4d4d4;
+}
+
+/* ── Punctuation: ( ) { } [ ] ; , . ── */
+#article-content .token.punctuation {
+  color: #d4d4d4;
+}
+
+/* ── Properties & parameters ── (cyan) */
+#article-content .token.property,
+#article-content .token.parameter {
+  color: #9cdcfe;
+}
+
+/* ── Regex ── */
+#article-content .token.regex {
+  color: #d16969;
+}
+
+/* ── Decorators / annotations ── */
+#article-content .token.decorator,
+#article-content .token.annotation {
+  color: #dcdcaa;
+}
+
+/* ── Tags (HTML/JSX) ── */
+#article-content .token.tag {
+  color: #569cd6;
+}
+#article-content .token.tag .token.punctuation {
+  color: #808080;
+}
+#article-content .token.attr-name {
+  color: #9cdcfe;
+}
+#article-content .token.attr-value,
+#article-content .token.attr-value .token.punctuation {
+  color: #ce9178;
+}
+
+/* ── CSS-specific ── */
+#article-content .token.selector {
+  color: #d7ba7d;
+}
+#article-content .token.atrule {
+  color: #c586c0;
+}
+
+/* ── Misc ── */
+#article-content .token.important,
+#article-content .token.bold {
+  font-weight: bold;
+}
+#article-content .token.italic {
+  font-style: italic;
+}
+#article-content .token.entity {
+  cursor: help;
+}
+#article-content .token.inserted {
+  color: #b5cea8;
+}
+#article-content .token.deleted {
+  color: #ce9178;
 }

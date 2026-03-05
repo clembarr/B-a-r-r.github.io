@@ -14,51 +14,50 @@ export const ecograph: Retex = {
   },
   description: {
     fr:
-    "Ecograph aide les entreprises à se positionner géographiquement, en fonction de données climatiques et d'émission de GES à travers le monde. Cette application permet de visualiser de lourdes masses d'informations, à travers plusieurs vues, telles que des graphiques et des cartes.",
+    "Ecograph aide les entreprises à se positionner géographiquement, en fonction de données climatiques et d'émission \
+    de GES à travers le monde. Cette application permet de visualiser de lourdes masses d'informations, à travers plusieurs \
+    vues, telles que des graphiques et des cartes.",
     en:
-    "Ecograph helps companies to position themselves geographically, based on climatic and GES emission data around the world. This app allows to visualize heavy masses of information, through several views, such as graphs and maps.",
+    "Ecograph helps companies to position themselves geographically, based on climatic and GES emission data around the world. \
+    This app allows to visualize heavy masses of information, through several views, such as graphs and maps.",
   },
   tags: {
-    fr: ["Visualisation", "BD", "Collab", "Académique", "Universitaire", "Base de données", "POO"],
-    en: ["DB", "Visualization",  "Teamwork", "Academic", "University", "DB", "OOP"],
+    fr: ["Visu.", "BD", "AGILE", "Collab", "Académique", "Universitaire", "Base de données", "POO"],
+    en: ["DB", "Visu.", "AGILE", "Teamwork", "Academic", "University", "OOP"],
     [UNIVERSAL_LANG]: ["ORM", "Graph", "Graphs", "Data", "C#", "CS", "Fullstack"],
   },
   date: new Date(2024, 6),
   specs: {
     en:
-    "As part of a team of 5 developers, I co-developed Ecograph, \
-    a client application allowing companies to <strong>visualize and analyze \
-    climatic and GES emission data</strong>. I participated \
-    in the design of the graphical interface in C# and the implementation of the \
-    backend in Python (with SQLAlchemy and SQL Server), integrating CSV datasets \
-    to feed the database. This project allowed me to strengthen my skills \
-    in writing <strong>specification documents</strong> and project management and, \
-    planning in a team. The goal was to provide <strong>a \
-    decision-making tool</strong> for a strategic positioning of companies facing \
-    environmental challenges.",
+    "Ecograph is a university and collaborative project allowing companies to <strong>visualize and analyze\
+    climatic and GES emission data</strong> around the world.\
+    The graphical interface in C# .NET communicates with a backend Python-SQLServer, with SQLAlchemy as ORM.\
+    The data is <strong>integrated from CSV datasets</strong>, available on large collections (e.g Our World in Data).\
+    The goal was to provide <strong>a decision-making tool</strong> for a strategic positioning of companies facing\
+    environmental challenges.<br>\
+    This project required a solid and <strong>agile</strong> management in a team, including the meticulous\
+    writing of the <strong>specification document</strong>, and the planning of tasks over the two weeks expected.",
     fr:
-    "Au sein d'une équipe de 5 développeurs, j'ai co-développé Ecograph, \
-    une application cliente permettant aux entreprises <strong>de visualiser et \
-    d'analyser des données climatiques et d'émissions de GES</strong>. J'ai participé \
-    à la conception de l'interface graphique en C# .NET et à l'implémentation du \
-    backend en Python (avec SQLAlchemy et SQL Server), en intégrant des datasets \
-    CSV pour alimenter la base. Ce projet m'a permis de renforcer mes compétences \
-    en rédaction des <strong>dossiers de spécifications</strong> et gestion de projet \
-    en équipe. L'objectif était de fournir <strong>un \
-    outil décisionnel</strong> pour un positionnement stratégique des entreprises \
-    face aux enjeux environnementaux.",
+    "Ecograph est un projet universitaire et collaboratif permettant aux entreprises de <strong>visualiser\
+    et d'analyser des données climatiques et d'émissions de GES</strong> à travers le monde.\
+    L'interface graphique en C# .NET communique avec un backend Python-SQLServer, avec SQLAlchemy comme ORM.\
+    Les données sont <strong>intégrées à partir de datasets</strong> CSV, disponibles sur les grands recueils (e.g Our World in Data).\
+    L'objectif était de fournir <strong>un outil décisionnel</strong> pour un positionnement stratégique des\
+    entreprises face aux enjeux environnementaux.<br>\
+    Ce projet a nécessité une gestion solide et <strong>agile</strong> en équipe, dont la rédaction minutieuse du\
+    <strong>dossier des spécifications</strong>, et la plannification des tâches sur les deux semaines prévues.",
   },
   notions: {
     en: [
-      "Filling a database from CSV files",
-      "Teamwork and Git management",
-      "Linking interfaces between back and front ends",
-      "Writing specifications and requirements documents"
+      "Modelization and decision support",
+      "Object-relational mapping",
+      "Agile and DevOps management",
+      "Project specifications and requirements documents"
     ],
     fr: [
-      "Remplissage d'une BD à partir de fichiers CSV",
-      "Management de projet et gestion du Git",
-      "Liaison entre les différentes technos du projet",
+      "Modélisation et aide à la décision",
+      "Mapping relationnelle-objet",
+      "Management agile et DevOps",
       "Cahier des charges et dossier de spécifications"
     ],
   },
@@ -70,6 +69,7 @@ export const ecograph: Retex = {
   ],
   img: [
     projectsImages.ecograph_home,
+    projectsImages.ecograph_visu,
     projectsImages.ecograph_gestion,
     projectsImages.ecograph_gantt
   ],

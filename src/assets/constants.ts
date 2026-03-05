@@ -22,10 +22,14 @@ import {
   BlogCategory,
   GalleryControl,
   GalleryAction,
+  CareerEntryType,
+  SEOConstants,
 } from "./dataTypes";
 import { UNIVERSAL_LANG } from "./i18n";
 
 export const CARD_TEXT_MAX_LINES = 5;
+
+export const APP_URL = "https://clembarr.dev";
 
 export const galleryControls: Array<GalleryControl> = [
   { action: GalleryAction.NAVIGATE_NEXT,  label: "Next",      binding: "→",   keys: ["ArrowRight"] },
@@ -35,38 +39,6 @@ export const galleryControls: Array<GalleryControl> = [
   { action: GalleryAction.RESET,          label: "Reset",     binding: "0",   keys: ["0"] },
   { action: GalleryAction.CLOSE,          label: "Close",     binding: "Esc", keys: ["Escape"] },
 ];
-
-export const PageTransitionsConstants = {
-  DURATION: 0.4,
-  REDUCED_MOTION_DURATION: 0.01,
-  INITIAL_OPACITY: "0",
-  INITIAL_Y: 20,
-  ANIMATE_OPACITY: 1,
-  ANIMATE_Y: "0",
-  EXIT_OPACITY: "0",
-  EXIT_Y: -20,
-  EASE: "0.25 0.1 0.25 1", //space separated values
-}
-
-export const ScrollRevealConstants = {
-  DURATION: 0.6,
-  REDUCED_MOTION_DURATION: 0.01,
-  INITIAL_POS: 50, //varies based on direction
-  INITIAL_OPACITY: 0,
-  ANIMATE_POS: 0,
-  ANIMATE_OPACITY: 1,
-  EASE: "0.25 0.1 0.25 1", //space separated values
-}
-
-export const ArticlesMotionConstants = {
-  MOTION_OPACITY: 0,
-  MOTION_Y: 20,
-  ANIMATE_OPACITY: 1,
-  ANIMATE_Y: 0,
-  REDUCED_MOTION_TRANSITION_DURATION: 0.01,
-  TRANSITION_DURATION: 0.5,
-  TRANSITION_EASE: "0.25 0.1 0.25 1"
-}
 
 export const skillCategories: Array<SkillCategorie> = [
   {
@@ -327,14 +299,94 @@ export const sortOptions: Array<SortOption> = [
 
 /** Store all the available blog sorting/filtering options. */
 export const blogSortingOptions: Array<FilterOption> = [
-  { context: "ALL",                      content: { fr: "Tous", en: "All" } },
-  { context: "NEWEST",                   content: { fr: "Récents", en: "Newest" } },
-  { context: "OLDEST",                   content: { fr: "Anciens", en: "Oldest" } },
-  { context: BlogCategory.RESEARCH,      content: { fr: "Recherche", en: "Research" } },
-  { context: BlogCategory.DEVELOPMENT,   content: { fr: "Développement", en: "Development" }, abreviation: { content: { fr: "Dév", en: "Dev" } } },
-  { context: BlogCategory.TUTORIAL,      content: { fr: "Tutoriel", en: "Tutorial" },         abreviation: { content: { fr: "Tuto", en: "Tuto" } } },
-  { context: BlogCategory.ALGORITHM,     content: { fr: "Algorithmie", en: "Algorithm" },     abreviation: { content: { fr: "Algo", en: "Algo" } } },
-  { context: BlogCategory.OPINION,       content: { fr: "Opinion", en: "Opinion" } },
+  { 
+    context: "ALL", 
+    content: 
+    { 
+      fr: "Tous", 
+      en: "All" 
+    } 
+  },
+  { 
+    context: "NEWEST",
+    content: 
+    { 
+      fr: "Récents", 
+      en: "Newest" 
+    } 
+  },
+  { 
+    context: "OLDEST",
+    content: 
+    { 
+      fr: "Anciens", 
+      en: "Oldest" 
+    } 
+  },
+  { 
+    context: BlogCategory.RESEARCH,
+    content: 
+    { 
+      fr: "Recherche", 
+      en: "Research" 
+    } 
+  },
+  { 
+    context: BlogCategory.DEVELOPMENT,
+    content: 
+    { 
+      fr: "Développement", 
+      en: "Development" 
+    }, 
+    abreviation: 
+    { 
+      content: 
+      { 
+        fr: "Dév", 
+        en: "Dev" 
+      } 
+    } 
+  },
+  { 
+    context: BlogCategory.TUTORIAL,
+    content: 
+    { 
+      fr: "Tutoriel", 
+      en: "Tutorial" 
+    },         
+    abreviation: 
+    { 
+      content: 
+      { 
+        fr: "Tuto", 
+        en: "Tuto" 
+      } 
+    } 
+  },
+  { 
+    context: BlogCategory.ALGORITHM,
+    content: 
+    { 
+      fr: "Algorithmie", 
+      en: "Algorithm" 
+    },     
+    abreviation: 
+    { 
+      content: 
+      { 
+        fr: "Algo", 
+        en: "Algo" 
+      } 
+    } 
+  },
+  { 
+    context: BlogCategory.OPINION,
+    content: 
+    { 
+      fr: "Opinion", 
+      en: "Opinion" 
+    } 
+  },
 ];
 
 /**
@@ -723,7 +775,7 @@ export const socialMedia: Array<SocialMedia> = [
     label: "github",
     icon: socialsIcons.github_icon,
     link: "https://github.com/B-a-r-r",
-    at: "@B-a-r-r",
+    at: "@clembarr",
   },
   {
     label: "linkedin",
@@ -861,32 +913,16 @@ export const noDataMessages: Array<Message> = [
     context: "blog",
     content:
     {
-      fr: "Aucun article trouvé",
-      en: "No articles found",
+      fr: "Aucun article ne correspond à vos critères >_<",
+      en: "No article matches your search criteria >_<",
     },
   },
   {
     context: "blogEmpty",
     content:
     {
-      fr: "Aucun article pour le moment",
-      en: "No articles yet",
-    },
-  },
-  {
-    context: "blogEmptyHint",
-    content:
-    {
       fr: "Les articles arrivent bientôt !",
       en: "Blog posts coming soon!",
-    },
-  },
-  {
-    context: "blogNoResultsHint",
-    content:
-    {
-      fr: "Essayez de modifier vos filtres",
-      en: "Try adjusting your search or filters",
     },
   },
 ];
@@ -988,14 +1024,6 @@ export const placeholderMessages: Array<Message> = [
     },
   },
   {
-    context: "blogClearFilters",
-    content:
-    {
-      fr: "Effacer les filtres",
-      en: "Clear Filters",
-    },
-  },
-  {
     context: "blogLoading",
     content:
     {
@@ -1017,21 +1045,6 @@ export const placeholderMessages: Array<Message> = [
     {
       fr: "articles trouvés",
       en: "articles found",
-    },
-  },
-  {
-    context: "blogTitle",
-    content:
-    {
-      [UNIVERSAL_LANG]: "Blog & Research",
-    },
-  },
-  {
-    context: "blogSubtitle",
-    content:
-    {
-      fr: "Réflexions sur le développement logiciel, la recherche, les algorithmes et la technologie.",
-      en: "Thoughts on software development, research, algorithms, and technology.",
     },
   },
   {
@@ -1210,3 +1223,110 @@ export const aboutLinks: Array<Hyperlink> = [
     link: "/career"
   },
 ];
+
+/** Translated labels for each career entry type, keyed by language. */
+export const careerTypeLabels: {[type: string]: {[lang: string]: string}} = {
+  [CareerEntryType.EDUCATION]: { 
+    fr: "Formation", 
+    en: "Education" 
+  },
+  [CareerEntryType.EXPERIENCE]: {
+    fr: "Expérience", 
+    en: "Experience" 
+  },
+  [CareerEntryType.CERTIFICATION]: { 
+    fr: "Certification", 
+    en: "Certification" 
+  },
+  [CareerEntryType.VOLUNTEERING]: { 
+    fr: "Bénévolat", 
+    en: "Volunteering" 
+  },
+};
+
+export const PageTransitionsConstants = {
+  DURATION: 0.4,
+  REDUCED_MOTION_DURATION: 0.01,
+  INITIAL_OPACITY: "0",
+  INITIAL_Y: 20,
+  ANIMATE_OPACITY: 1,
+  ANIMATE_Y: "0",
+  EXIT_OPACITY: "0",
+  EXIT_Y: -20,
+  EASE: "0.25 0.1 0.25 1", //space separated values
+}
+
+export const ScrollRevealConstants = {
+  DURATION: 0.6,
+  REDUCED_MOTION_DURATION: 0.01,
+  INITIAL_POS: 50, //varies based on direction
+  INITIAL_OPACITY: 0,
+  ANIMATE_POS: 0,
+  ANIMATE_OPACITY: 1,
+  EASE: "0.25 0.1 0.25 1", //space separated values
+}
+
+export const ArticlesMotionConstants = {
+  MOTION_OPACITY: 0,
+  MOTION_Y: 20,
+  ANIMATE_OPACITY: 1,
+  ANIMATE_Y: 0,
+  REDUCED_MOTION_TRANSITION_DURATION: 0.01,
+  TRANSITION_DURATION: 0.5,
+  TRANSITION_EASE: "0.25 0.1 0.25 1"
+}
+
+export const TableOfContentObserverConstants = {
+  ROOT_MARGIN: "-80px 0px -80% 0px",
+  THRESHOLD: 1.0,
+  MOTION_OPACITY: 0,
+  MOTION_X: 20,
+  ANIMATE_OPACITY: 1,
+  ANIMATE_X: 0,
+  TRANSITION_DURATION: 0.4,
+  REDUCED_MOTION_TRANSITION_DURATION: 0.01,
+  TRANSITION_DELAY: 0.2,
+  TRANSITION_EASE: "0.25 0.1 0.25 1"
+}
+
+export const TableOfContentsItemConstants = {
+  MOTION_OPACITY: 0,
+  MOTION_X: 20,
+  ANIMATE_OPACITY: 1,
+  ANIMATE_X: 0,
+  TRANSITION_DURATION: 0.3,
+  REDUCED_MOTION_TRANSITION_DURATION: 0.01,
+  REDUCED_MOTION_TRANSITION_DELAY: 0
+}
+
+export const BlogSEOConstants: SEOConstants = {
+  title: `Blog - ${author.firstName} ${author.lastName}`,
+  description: "Thoughts on software development, research, algorithms, and technology.",
+  keywords: ['Blog', 'Software Development', 'AI', 'Algorithms', 'Research', 'Porfolio'],
+  ogUrl: `${APP_URL}/blog`,
+  canonical: `${APP_URL}/blog`,
+}
+
+export const ProjectSEOConstants: SEOConstants = {
+  title: `Projets - ${author.firstName} ${author.lastName}`,
+  description: "Découvrez les projets de Clément Barrière : développement web, intelligence artificielle, algorithmes et plus.",
+  keywords: ['projets', 'projects', 'développement', 'software', 'AI', 'algorithms'],
+  ogUrl: `${APP_URL}/projects`,
+  canonical: `${APP_URL}/projects`,
+}
+
+export const HomeSEOConstants: SEOConstants = {
+  title: `${author.firstName} ${author.lastName} - Portfolio`,
+  description: "Portfolio de Clément Barrière - Développeur logiciel & chercheur. Projets, compétences et parcours.",
+  keywords: ['portfolio', 'développeur', 'software developer', 'researcher', 'Clément Barrière'],
+  ogUrl: `${APP_URL}`,
+  canonical: `${APP_URL}`,
+}
+
+export const CareerSEOConstants: SEOConstants = {
+  title: `Career - Clément Barrière`,
+  description: "Parcours professionnel de Clément Barrière : expérience, formations et certifications.",
+  keywords: ['career', 'resume', 'timeline', 'education', 'experience'],
+  ogUrl: `${APP_URL}/career`,
+  canonical: `${APP_URL}/career`,
+}

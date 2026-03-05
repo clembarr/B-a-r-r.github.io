@@ -1,4 +1,4 @@
-import { Hyperlink, NavbarPattern, BlogPost } from "./assets/dataTypes";
+import { BlogPost } from "./assets/dataTypes";
 import { navLinks } from "./assets/constants";
 
 /**
@@ -16,7 +16,7 @@ export const randomNumberBetween = (min: number, max: number) => {
  * @param array the array to shuffle
  * @returns the shuffled array
  */
-export const shuffle = (array: any[]) => { 
+export const shuffle = <T>(array: T[]): T[] => {
   for (let i = array.length - 1; i > 0; i--) { 
     const j = Math.floor(Math.random() * (i + 1)); 
     [array[i], array[j]] = [array[j], array[i]]; 

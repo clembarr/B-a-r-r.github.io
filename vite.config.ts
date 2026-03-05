@@ -88,6 +88,20 @@ export default defineConfig({
       }
     })
   ],
+  optimizeDeps: {
+    include: [
+      'prismjs',
+      'prismjs/components/prism-javascript',
+      'prismjs/components/prism-typescript',
+      'prismjs/components/prism-jsx',
+      'prismjs/components/prism-tsx',
+      'prismjs/components/prism-python',
+      'prismjs/components/prism-css',
+      'prismjs/components/prism-json',
+      'prismjs/components/prism-bash',
+      'prismjs/components/prism-sql',
+    ],
+  },
   base: "/",
   build: {
     rollupOptions: {

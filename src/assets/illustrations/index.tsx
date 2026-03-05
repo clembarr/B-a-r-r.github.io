@@ -1,6 +1,7 @@
 import { GraphicAsset } from "../dataTypes";
 
-import portrait from "./about_portrait.jpg";
+import portrait_light from "./about_portrait_light.jpg";
+import portrait_dark from "./about_portrait_dark.jpg";
 import slider_figure_light from "./slider_figure_light.webp";
 import slider_figure_dark from "./slider_figure_dark.webp";
 import placeholder_retex_image from "./placeholder_retex_image.png";
@@ -43,6 +44,15 @@ const heroFigure: GraphicAsset = {
     'dark': hero_figure_dark,
   },
   alt: "Hero Figure",
+};
+
+const portrait: GraphicAsset = {
+  label: "author_portrait",
+  content: {
+    'light': portrait_light,
+    'dark': portrait_dark,
+  },
+  alt: "Portrait of the author",
 };
 
 export const coreImages = {

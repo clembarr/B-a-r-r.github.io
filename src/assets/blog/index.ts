@@ -4,18 +4,19 @@
  */
 
 import { BlogPost } from '../dataTypes';
-import { mctsPathfinding } from './mcts-pathfinding';
+import { eewLangBiases } from './eew-lang-biases';
 
 /**
  * All blog posts - ordered by date (most recent first)
  */
 export const blogPosts: BlogPost[] = [
-  mctsPathfinding,
+  eewLangBiases
 ];
 
 // Individual exports for direct access
-export { mctsPathfinding };
-
+export { 
+  eewLangBiases 
+};
 /**
  * EMPTY BLOG POST TEMPLATE:
  * -------------------------
@@ -39,17 +40,16 @@ export { mctsPathfinding };
     readingTime: 5,
     paragraphs: [
       {
-        context: "Section Title",
+        title: {
+          "0": "Section Title",
+          fr: "Titre de section",
+        },
         content: {
           "0": "",
           fr: "",
         },
       },
     ],
-    tableOfContents: {
-      "0": [
-        { id: "section-title", text: "Section Title", level: 2 },
-      ],
-    },
+    tableOfContents: true,
   },
  */

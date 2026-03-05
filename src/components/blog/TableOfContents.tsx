@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { TableOfContentsItem } from '../../assets/dataTypes';
-import { placeholderMessages } from '../../assets/constants';
+import { placeholderMessages, TableOfContentObserverConstants, TableOfContentsItemConstants } from '../../assets/constants';
 import { LangContext } from '../language';
 import styles from '../../style';
 
@@ -13,14 +13,6 @@ type TableOfContentsProps = {
 /**
  * @component TableOfContents
  * @description Auto-generated table of contents with active section highlighting
- *
- * Features:
- * - Automatically extracts headings from article
- * - Highlights currently visible section
- * - Smooth scroll to section on click
- * - Sticky positioning
- * - Nested structure based on heading levels
- * - Responsive hiding on mobile
  */
 const TableOfContents = ({ items, className = '' }: TableOfContentsProps) => {
   const [activeId, setActiveId] = useState<string>('');
@@ -32,7 +24,7 @@ const TableOfContents = ({ items, className = '' }: TableOfContentsProps) => {
     placeholderMessages.find((m) => m.context === context)!.content[currentLang];
 
   useEffect(() => {
-    // Intersection Observer to track which heading is currently visible
+    // Intersection Observer to track which heading is currently focused
     const observerCallback = (entries: IntersectionObserverEntry[]) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
@@ -42,8 +34,8 @@ const TableOfContents = ({ items, className = '' }: TableOfContentsProps) => {
     };
 
     const observer = new IntersectionObserver(observerCallback, {
-      rootMargin: '-80px 0px -80% 0px',
-      threshold: 1.0,
+      rootMargin: TableOfContentObserverConstants.ROOT_MARGIN,
+      threshold: TableOfContentObserverConstants.THRESHOLD,
     });
 
     // Observe all headings
@@ -84,12 +76,12 @@ const TableOfContents = ({ items, className = '' }: TableOfContentsProps) => {
 
   return (
     <motion.nav
-      initial={prefersReducedMotion ? {} : { opacity: 0, x: 20 }}
-      animate={{ opacity: 1, x: 0 }}
+      initial={prefersReducedMotion ? {} : { opacity: TableOfContentObserverConstants.MOTION_OPACITY, x: TableOfContentObserverConstants.MOTION_X }}
+      animate={{ opacity: TableOfContentObserverConstants.ANIMATE_OPACITY, x: TableOfContentObserverConstants.ANIMATE_X }}
       transition={{
-        duration: prefersReducedMotion ? 0.01 : 0.4,
-        delay: 0.2,
-        ease: [0.25, 0.1, 0.25, 1],
+        duration: prefersReducedMotion ? TableOfContentObserverConstants.REDUCED_MOTION_TRANSITION_DURATION : TableOfContentObserverConstants.TRANSITION_DURATION,
+        delay: TableOfContentObserverConstants.TRANSITION_DELAY,
+        ease: TableOfContentObserverConstants.TRANSITION_EASE.split(' ').map((n) => parseFloat(n)) as [number, number, number, number],
       }}
       className={`
         ${className}
@@ -124,7 +116,11 @@ const TableOfContents = ({ items, className = '' }: TableOfContentsProps) => {
           {ph("blogTableOfContents")}
         </h2>
 
-        <ul className="space-y-2">
+        <ul className={`
+            space-y-2
+            text-2xs
+          `}
+        >
           {items.map((item, index) => {
             const isActive = activeId === item.id;
             const indent = (item.level - 1) * 12; // 12px per level
@@ -133,14 +129,14 @@ const TableOfContents = ({ items, className = '' }: TableOfContentsProps) => {
               <motion.li
                 key={index}
                 style={{ paddingLeft: `${indent}px` }}
-                initial={prefersReducedMotion ? {} : { opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
+                initial={prefersReducedMotion ? {} : { opacity: TableOfContentsItemConstants.MOTION_OPACITY, x: TableOfContentsItemConstants.MOTION_X }}
+                animate={{ opacity: TableOfContentsItemConstants.ANIMATE_OPACITY, x: TableOfContentsItemConstants.ANIMATE_X }}
                 transition={{
-                  duration: prefersReducedMotion ? 0.01 : 0.3,
-                  delay: prefersReducedMotion ? 0 : index * 0.05,
+                  duration: prefersReducedMotion ? TableOfContentsItemConstants.REDUCED_MOTION_TRANSITION_DURATION : TableOfContentsItemConstants.TRANSITION_DURATION,
+                  delay: prefersReducedMotion ? TableOfContentsItemConstants.REDUCED_MOTION_TRANSITION_DELAY : index * 0.05,
                 }}
               >
-                <a
+                <a id={`table-item-${item.id}`}
                   href={`#${item.id}`}
                   onClick={(e) => handleClick(e, item.id)}
                   className={`
@@ -165,7 +161,6 @@ const TableOfContents = ({ items, className = '' }: TableOfContentsProps) => {
           })}
         </ul>
 
-        {/* Progress Indicator */}
         <div className="mt-6 pt-4 border-t border-(--color-quinary)">
           <div className="flex items-center justify-between text-3xs text-(--color-quaternary) opacity-60">
             <span>{ph("blogScrollProgress")}</span>

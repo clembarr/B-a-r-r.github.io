@@ -20,7 +20,7 @@ const BLOG_CATEGORIES = Object.values(BlogCategory) as string[];
  * used by ProjectsListing for projects.
  */
 const BlogListing = ({ posts }: BlogListingProps) => {
-    const { toMatch, updateSearch, setSearchInput } = useContext(SearchContext);
+    const { toMatch } = useContext(SearchContext);
     const { currentLang } = useContext(LangContext);
 
     const filteredPosts = useMemo(() => {
@@ -59,8 +59,6 @@ const BlogListing = ({ posts }: BlogListingProps) => {
         return filtered;
     }, [posts, toMatch, currentLang]);
 
-    const hasActiveFilter = toMatch[0] !== "ALL";
-
     /** @function msg Shorthand to look up a message by context in noDataMessages. */
     const msg = (context: string) =>
         noDataMessages.find((m) => m.context === context)!.content[currentLang];
@@ -71,17 +69,15 @@ const BlogListing = ({ posts }: BlogListingProps) => {
 
     return (
         <>
-            {/* Results count */}
             {posts.length > 0 && (
                 <ScrollReveal direction="up" delay={0.3}>
-                    <p className="text-center text-2xs text-(--color-quaternary) opacity-70">
+                    <p className="text-center text-2xs text-(--color-quaternary) opacity-40">
                         {filteredPosts.length}{' '}
                         {filteredPosts.length === 1 ? ph("blogResultSingular") : ph("blogResultPlural")}
                     </p>
                 </ScrollReveal>
             )}
 
-            {/* Blog posts grid */}
             <ScrollReveal direction="up" delay={0.4}>
                 {filteredPosts.length > 0 ? (
                     <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-8">
@@ -90,37 +86,19 @@ const BlogListing = ({ posts }: BlogListingProps) => {
                         ))}
                     </div>
                 ) : (
-                    <div className="text-center py-20 space-y-4">
-                        <h2 className="font-primary-semibold text-xl text-(--color-quaternary) opacity-70">
-                            {posts.length === 0 ? msg("blogEmpty") : msg("blog")}
-                        </h2>
-                        <p className="text-2xs text-(--color-quaternary) opacity-50">
-                            {posts.length === 0 ? msg("blogEmptyHint") : msg("blogNoResultsHint")}
-                        </p>
-                        {hasActiveFilter && (
-                            <button
-                                onClick={() => {
-                                    setSearchInput('');
-                                    updateSearch(["ALL"]);
-                                }}
-                                className="
-                                    mt-4
-                                    px-6
-                                    py-3
-                                    bg-(--color-tertiary)
-                                    text-(--color-primary)
-                                    rounded-lg
-                                    font-primary-semibold
-                                    hover:scale-105
-                                    active:scale-95
-                                    transition-transform
-                                    duration-200
-                                    cursor-pointer
-                                "
-                            >
-                                {ph("blogClearFilters")}
-                            </button>
-                        )}
+                    <div className={`
+                            text-center 
+                            py-30
+                            space-y-4
+                        `}
+                    >
+                        <h2 className={`
+                                font-primary
+                                text-sm
+                                text-(--color-quaternary) 
+                                opacity-70
+                            `}
+                        > {posts.length === 0 ? msg("blogEmpty") : msg("blog")} </h2>
                     </div>
                 )}
             </ScrollReveal>

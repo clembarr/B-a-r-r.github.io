@@ -22,6 +22,7 @@ const RetexViewer = () => {
     const galleryPreview = useRef<HTMLDivElement>(null);
     const specsContainer = useRef<HTMLSpanElement>(null);
     const notionsContainer = useRef<HTMLSpanElement>(null);
+    const notionsList = useRef<HTMLUListElement>(null);
 
     /** Maximum number of notions to display before truncating to prevent overflow. */
     const [maxNotions, setMaxNotions] = useState<number>(Infinity);
@@ -38,6 +39,19 @@ const RetexViewer = () => {
             if (isOverflowing(notionsContainer.current)) {adjustFontSize(notionsContainer.current, "min");}
             else {adjustFontSize(notionsContainer.current, "max");}
         }
+
+        // if (notionsList.current) {
+        //     const listItems: HTMLCollectionOf<HTMLElement> = notionsList.current.children as HTMLCollectionOf<HTMLElement>;
+
+        //     if (listItems.length > 0 && isOverflowing(notionsList.current)) {
+        //         const lastItem = listItems[listItems.length - 1] as HTMLElement;
+        //         lastItem.style.display = "none";
+
+        //         for (let i = listItems.length - 2; i >= 0; i--) {
+        //             if (isOverflowing(notionsList.current)) {adjustFontSize(notionsList.current, "min");}
+        //         }
+        //     }
+        // }
 
         if (specsContainer.current && notionsContainer.current) {
             if (getComputedStyle(specsContainer.current).fontSize <
@@ -225,9 +239,8 @@ const RetexViewer = () => {
                                 relative
                             `}
                         >
-                            <ul
-                                className=
-                                {`
+                            <ul ref={notionsList}
+                                className={`
                                     ${styles.sizeFull}
                                     ${styles.flexCol}
                                     ${styles.contentStartAll}

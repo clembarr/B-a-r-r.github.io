@@ -27,8 +27,8 @@ export type SupportedLanguage = typeof SUPPORTED_LANGUAGES[number];
  * Type for multilingual content objects
  * Maps language codes to their content strings
  */
-export type MultilingualContent = { [key: string]: string | undefined };
-
+export type MultilingualContent = { [key: string]: string };
+export type MultilingualContentArray = { [key: string]: string[] };
 /**
  * Safely retrieve content in the specified language with fallback logic.
  *

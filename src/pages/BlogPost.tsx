@@ -2,7 +2,7 @@ import { useParams, useNavigate } from 'react-router';
 import { ArticleLayout } from '../components/blog';
 import { PageTransition } from '../components/animations';
 import { UNIVERSAL_LANG } from '../assets/i18n';
-import { author } from '../assets/constants';
+import { APP_URL, author } from '../assets/constants';
 import { blogPosts } from '../assets/blog';
 import { getRelatedPosts } from '../utils';
 import { StructuredData, MetaTags, generateBlogPostSchema } from '../components/seo';
@@ -57,7 +57,7 @@ const BlogPost = () => {
           keywords,
           author: {
             name: `${author.firstName} ${author.lastName}`,
-            url: 'https://clembarr.dev',
+            url: APP_URL,
           },
         })}
       />

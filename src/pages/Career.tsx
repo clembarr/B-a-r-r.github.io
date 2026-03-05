@@ -4,17 +4,9 @@ import { PageTransition, ScrollReveal } from "../components/animations";
 import { MetaTags } from "../components/seo";
 import { LangContext } from "../components/language";
 import { CareerEntryType, CareerEntry } from "../assets/dataTypes";
+import { author, CareerSEOConstants, careerTypeLabels } from "../assets/constants";
 import { careerPageContent, careerTimeline } from "../assets/contents";
 import styles from "../style";
-
-/** Translated labels for each career entry type, keyed by language. */
-const careerTypeLabels: {[type: string]: {[lang: string]: string}} = {
-  [CareerEntryType.EDUCATION]: { fr: "Formation", en: "Education" },
-  [CareerEntryType.EXPERIENCE]: { fr: "Expérience", en: "Experience" },
-  [CareerEntryType.PROJECT]: { fr: "Projet", en: "Project" },
-  [CareerEntryType.CERTIFICATION]: { fr: "Certification", en: "Certification" },
-  [CareerEntryType.VOLUNTEERING]: { fr: "Bénévolat", en: "Volunteering" },
-};
 
 /** Major entry types (education, experience) receive a larger visual treatment. */
 const isMajorType = (type: CareerEntryType) =>
@@ -22,12 +14,7 @@ const isMajorType = (type: CareerEntryType) =>
 
 /**
  * @component Career
- * @description Career roadmap page with a horizontal stats summary bar and a
- * vertical timeline with differentiated card sizes. Major entries (education,
- * experience) get wider cards with an accent left border and larger timeline
- * dots. Minor entries (project, certification, volunteering) get compact cards.
- * Desktop: centered timeline with alternating cards of varying widths.
- * Mobile: left-aligned timeline with stacked cards.
+ * @description Career roadmap page.
  */
 const Career = () => {
   const { currentLang } = useContext(LangContext);
@@ -98,11 +85,11 @@ const Career = () => {
   return (
     <PageTransition>
       <MetaTags
-        title={`${careerPageContent.title[currentLang]} - Clément Barrière`}
+        title={`${careerPageContent.title[currentLang]} - ${author.firstName} ${author.lastName}`}
         description={careerPageContent.subtitle[currentLang]}
-        keywords={["Career", "Resume", "Timeline", "Education", "Experience"]}
-        ogUrl="https://clembarr.dev/career"
-        canonical="https://clembarr.dev/career"
+        keywords={CareerSEOConstants.keywords}
+        ogUrl={CareerSEOConstants.ogUrl}
+        canonical={CareerSEOConstants.canonical}
       />
 
       <div
@@ -115,7 +102,6 @@ const Career = () => {
           pb-20
         `}
       >
-        {/* Header */}
         <ScrollReveal direction="up" delay={0.1}>
           <header className="text-center space-y-2">
             <motion.h1

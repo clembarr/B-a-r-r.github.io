@@ -52,7 +52,7 @@ const GlitchDemo = () => {
   // Générer des caractères Matrix aléatoires
   const generateMatrixChars = (count: number) => {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*';
-    return Array.from({ length: count }, (_, i) => ({
+    return Array.from({ length: count }, () => ({
       char: chars[Math.floor(Math.random() * chars.length)],
       left: Math.random() * 100,
       delay: Math.random() * 5,

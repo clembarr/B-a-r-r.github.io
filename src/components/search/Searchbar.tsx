@@ -72,9 +72,7 @@ const Searchbar = ({ placeholderContext = "search" }: SearchbarProps) => {
                     bg-(--color-primary)
                     border-2
                     border-(--color-quaternary)
-                    transition-all
-                    duration-300
-                    ease-in-out
+                    ${styles.defaultTransition}
                 `}
                 onChange={(e) => handleChange(e.target.value)}
                 onKeyDown={(e) => {

@@ -18,7 +18,7 @@ const RetexGalleryViewer = ({images, untoggler}: RetexGalleryViewerProps) => {
     const {currentTheme} = useContext(ThemeContext);
     const [focusedImage, setFocusedImage] = useState<string>(images[0]);
     const [zoom, setZoom] = useState<number>(1);
-    const [panOffset, setPanOffset] = useState({ x: 0, y: 0 });
+    const [panOffset, setPanOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
     const [showHints, setShowHints] = useState<boolean>(true);
     const index = useRef<number>(0);
     const imageRef = useRef<HTMLImageElement>(null);
@@ -37,8 +37,9 @@ const RetexGalleryViewer = ({images, untoggler}: RetexGalleryViewerProps) => {
 
         const handleKeyDown = (e: KeyboardEvent) => {
             const control = galleryControls.find((c) => c.keys.includes(e.key));
-            if (control && actionHandlers[control.action]) {
-                actionHandlers[control.action]();
+            const handler: (() => void) | undefined = control ? actionHandlers[control.action] : undefined;
+            if (handler) {
+                handler();
             }
         };
 
@@ -174,6 +175,9 @@ const RetexGalleryViewer = ({images, untoggler}: RetexGalleryViewerProps) => {
                         ${styles.contentCenter}
                         space-x-[1%]
                         relative
+                        opacity-50
+                        hover:opacity-100
+                        ${styles.defaultTransition}
                     `}  
                 >
                     {images ? images.map((image, index) => (

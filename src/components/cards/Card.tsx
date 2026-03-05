@@ -76,7 +76,7 @@ const Card = ({title, content, tags, moreTopClasses, titleProps, contentProps, t
           text-(--color-quaternary)/80
           leading-relaxed
         `}
-        dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(content, {ALLOWED_TAGS: ['br']})}}
+        dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(content)}}
       />
 
       <div id={`card-${title}-tags`}

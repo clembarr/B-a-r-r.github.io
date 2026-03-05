@@ -4,6 +4,7 @@ import gpgtool_pgp_diagram from "./gpgtool_pgp_diagram.png";
 import gpgtool_keys_listing from "./gpgtool_keys_listing.jpg";
 import gpgtool_error_handling from "./gpgtool_error_handling.png";
 import dummy_arrays_code from "./dummy_arrays_code.png"
+import dummy_arrays_scheme from "./dummy_arrays_scheme.png"
 import portfolio from "./portfolio.jpg";
 import mstar_end_board from "./mstar_end_board.png";
 import mstar_mcts_algo from "./mstar_mcts_algo.png";
@@ -11,6 +12,7 @@ import mstar_tournament_results from "./mstar_tournament_results.png";
 import ecograph_home from "./ecograph_home.png";
 import ecograph_gestion from "./ecograph_gestion.png";
 import ecograph_gantt from "./ecograph_gantt.png"
+import ecograph_visu from "./ecograph_visu.png";
 import votator_home from "./votator_home.png"
 import votator_swagger from "./votator_swagger.png"
 import votator_active_bracket from "./votator_active_bracket.png"
@@ -33,6 +35,7 @@ export const projectsImages = {
   gpgtool_keys_listing,
   gpgtool_error_handling,
   dummy_arrays_code,
+  dummy_arrays_scheme,
   portfolio,
   mstar_end_board,
   mstar_mcts_algo,
@@ -40,6 +43,7 @@ export const projectsImages = {
   ecograph_home,
   ecograph_gestion,
   ecograph_gantt,
+  ecograph_visu,
   votator_home,
   votator_swagger,
   votator_active_bracket,

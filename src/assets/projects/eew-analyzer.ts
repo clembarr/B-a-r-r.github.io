@@ -22,46 +22,47 @@ export const eewAnalyzer: Retex = {
   ],
   description: {
     fr:
-    "Une application dédiée au modèle EEW, permettant de lancer des expérience et analyser les résultats à travers différentes métriques.",
+    "Une application dédiée au modèle de vie artificielle EEW, permettant de lancer des expérience et analyser les résultats à travers différentes métriques.",
     en:
-    "A dedicated application for the EEW model, allowing to run experiments and analyze the results through different metrics.",
+    "A dedicated application for the EEW artificial life model, allowing to run experiments and analyze the results through different metrics.",
   },
   specs: {
     fr:
-    "J'ai conçu une application dédiée pour le modèle Evolutionary Ecology of Words (EEW), refactorisant \
-    une base de scripts en une architecture structurée en deux modules Python. Le premier module, centré \
-    sur l'exécution des \"simulations\", intègre des <strong>classes spécialisées</strong> pour les acteurs de l'expérience, un <strong>système de \
-    logging</strong> complet, et une <strong>intégration flexible de LLM</strong>. Un fichier de configuration centralisé permet à \
-    l'utilisateur de <strong>personnaliser tous les paramètres</strong>. Le second module se concentre sur la valorisation \
-    des données (graphiques, animations) et l'analyse de métriques clés comme <strong>l'émergence de nouveauté</strong> \
-    et <strong>les dynamiques de dérivation sémantique</strong>, essentielles pour la recherche sur l'open-endedness. \
-    Un <strong>outil d'analyse complet</strong> pour d'optimiser la collaboration future sur ce sujet.",
+    `Développement d'une application CLI dédiée pour le modèle d'expérience de vie artificielle Evolutionary Ecology of Words (EEW), 
+    dans le cadre de mon stage de recherche au laboratoire ALIFE-CORE. L'architecture reprends les principes SOLID et DRY, séparant 
+    distinctement le <strong>moteur de simulation</strong> de <strong>l'outil d'analyse et de modélisation</strong>. Un wrapper indépendant 
+    permet de <strong>charger dynamiquement n'importe quel LLM</strong> en local. La configuration est <strong>centralisée dans un fichier 
+    JSON</strong>, permettant de piloter les règles de la simulation ainsi que les paramètres d'optimisation des ressources et de collecte 
+    des données. Mes travaux de recherche en parrallèle ont nécessité de recueillir de <strong>nouvelles données</strong> pendant l'expérimentation,
+    d'imaginer de <strong>nouvelles métriques</strong> et d'implémenter les visuels correspondants pour les valoriser. Certains paramètres abstraits,
+    comme les types de prompts ou les critères de jugement, permettent d'explorer de <strong>nouvelles trajectoires de mutations</strong>.<br>
+    Pour en savoir plus sur mon étude, je vous invite à consulter <strong>l'article dédié sur mon blog</strong>.`,
     en:
-    "I designed a dedicated application for the Evolutionary Ecology of Words (EEW) model, refactoring \
-    a base of scripts into a structured architecture with two Python modules. The first module, focused \
-    on running the \"simulations\", integrates <strong>specialized classes</strong> for the experiment's \
-    actors, a <strong>complete logging</strong> system, and a <strong>flexible LLM integration</strong>. \
-    A centralized configuration file allows the user to <strong>customize all parameters</strong>. The \
-    second module focuses on data valorization (graphics, animations) and the analysis of key metrics such as <strong>the emergence of novelty</strong> \
-    and <strong>the dynamics of semantic derivation</strong>, essential for research on open-endedness. \
-    A <strong>comprehensive analysis tool</strong> to optimize future collaboration on this topic."
+    `Development of a CLI dedicated for the Evolutionary Ecology of Words (EEW) experiment life model, in the context of my research internship 
+    at the ALIFE-CORE laboratory. The architecture follows the SOLID and DRY principles, separating the <strong>simulation engine</strong>
+    from the <strong>analysis and modeling tool</strong>. A standalone wrapper allows to <strong>load any LLM locally</strong>. The configuration is 
+    <strong>centralized in a JSON file</strong>, allowing to pilot the simulation rules as well as the optimization parameters and data collection.
+    My parallel research work required to gather <strong>new data</strong> during the experiment, to imagine <strong>new metrics</strong> and to implement
+    the corresponding visuals to value them. Some abstract parameters, such as prompt types or judgment criteria, allow to explore <strong>new mutation 
+    trajectories</strong>.<br> 
+    For more information about my study, I invite you to read <strong>the article dedicated to my blog</strong>.`,
   },
   notions: {
-    fr: ["Intégration de LLM et prompt engineering", "Conception de métriques spéciales", "Valorisation de datasets JSON"],
-    en: ["LLM integration and prompt engineering", "Design of special metrics", "Valorization of JSON datasets"],
+    fr: ["Intégration de LLMs et prompt engineering", "Analyse et valorisation de données", "Métriques et modélisation speciales", "Outils spé. pour la recherche"],
+    en: ["LLM integration and prompt engineering", "Data analysis and valorization", "Special metrics and modeling", "Special tools for research"],
   },
   tags: {
-    fr: ["Data", "LLM", "Stage", "Recherche", "Professionnel", "IA", "POO", "Programmation orientée objet", "Logiciel"],
-    en: ["Data", "LLM", "Intern", "Research", "Professional", "OOP", "Object-oriented programming", "Software", "Internship"],
-    [UNIVERSAL_LANG]: ["AI", "BigData", "Simulation", "Integration", "Data science"]
+    fr: ["Data", "ALife", "IA", "Recherche", "Professionnel", "Stage", "POO", "Programmation orientée objet", "Logiciel", "Vie artificielle", "Intelligence artificielle"],
+    en: ["Data", "ALife", "AI", "Intern", "Research", "Professional", "OOP", "Object-oriented programming", "Software", "Internship", "Artificial life", "Artificial intelligence"],
+    [UNIVERSAL_LANG]: ["AI", "BigData", "Simulation", "Integration", "Data science", "Math", "LLM"]
   },
   img: [
+    projectsImages.eew_basic_visuals,
     projectsImages.eew_algo,
+    projectsImages.eew_uml_simulation,
+    projectsImages.eew_uml_makegraph,
     projectsImages.eew_prompts,
     projectsImages.eew_logs_file,
-    projectsImages.eew_basic_visuals,
-    projectsImages.eew_uml_simulation,
-    projectsImages.eew_uml_makegraph
   ],
   additionalRessources: [
     {
@@ -78,5 +79,7 @@ export const eewAnalyzer: Retex = {
       },
       link: documents.eew_activity_report,
     }
-  ]
+  ],
+  favorite: true,
+  relatedPosts: ["eew-language-biases"],
 };

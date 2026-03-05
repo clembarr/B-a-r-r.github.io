@@ -1,31 +1,152 @@
 import styles from "../../style"
 import { coreImages } from "../../assets"
-import { bioText, aboutMottos, aboutLanguages, aboutStack, aboutSection } from "../../assets/contents"
+import { bioText, aboutSection, aboutWidgets } from "../../assets/contents"
 import DOMPurify from "dompurify"
-import { useContext, useMemo } from "react"
+import { useCallback, useContext, useEffect, useMemo, useRef } from "react"
 import { Link } from "react-router"
 import { LangContext } from "../language"
 import { ThemeContext } from "../theme/ThemeEngine"
-import { getActiveBreakpoint, randomNumberBetween } from "../../utils"
+import { adjustFontSize, getActiveBreakpoint, isOverflowing } from "../../utils"
 import { aboutLinks } from "../../assets/constants"
+import AboutWidget from "../widgets/AboutWidget"
+import { LanguageLevel } from "../../assets/dataTypes"
+import { MultilingualContent, MultilingualContentArray } from "../../assets/i18n"
 
 const About = () => {
   const { currentLang } = useContext(LangContext);
   const { currentTheme } = useContext(ThemeContext);
 
-  /** Pick a random motto on mount (stable across re-renders). */
-  const motto = useMemo(
-    () => aboutMottos[randomNumberBetween(0, aboutMottos.length - 1)],
-    []
-  );
+  const aboutTextRef = useRef<HTMLParagraphElement>(null);
 
-  /** Shared widget card classes. */
-  const widgetCard = `
-    px-4 py-3
-    rounded-lg
-    bg-(--color-secondary)
-    border border-(--color-tertiary)/15
-  `;
+  const handleTextOverflow = useCallback(() => {
+    if (!aboutTextRef.current) return;
+    if (isOverflowing(aboutTextRef.current)) {
+      adjustFontSize(aboutTextRef.current, "min");
+    } else {
+      adjustFontSize(aboutTextRef.current, "max");
+    }
+  }, []);
+
+  useEffect(() => {
+    handleTextOverflow();
+    window.addEventListener('resize', handleTextOverflow);
+    return () => window.removeEventListener('resize', handleTextOverflow);
+  }, [currentLang, handleTextOverflow]);
+
+  const languagesWidget = useMemo(() => {
+    const widget = aboutWidgets.find((widget) => widget.id == "lang");
+    if (!widget) return null;
+
+    const content = (widget.content as unknown as LanguageLevel[]).map((lang) => {
+      return (
+        <li key={lang.label[currentLang]}>
+          <span className={`font-primary-semibold`}> {lang.label[currentLang]} </span>
+            {" - "}
+          <span className="opacity-70"> {lang.level[currentLang]} </span>
+        </li>
+      )
+    })
+
+    return (
+      <AboutWidget
+        id={widget.id}
+        title={widget.title[currentLang]}
+        content={(
+          <ul id='languages-list'
+            className={`
+              font-primary-regular
+              2xl:text-sm
+              tracking-wide
+              space-y-2
+            `}
+          > {content} </ul>
+        )}
+        titleAdditionnalStyle="text-lg font-bold mb-4"
+      />
+    );
+  }, [currentLang]);
+
+  const tagsWidget = (widgetId: string) => {
+    const widget = aboutWidgets.find((widget) => widget.id == widgetId);
+    if (!widget) return null;
+
+    const content: string[] = (widget.content as MultilingualContentArray)[currentLang] as string[];
+    const contentList = content.map((hobby) => {
+        return (
+          <li key={hobby}
+            className={`
+              ${styles.contentCenter}
+            `}
+          >
+            <span className={`
+                ${styles.contentCenter}
+                font-primary-semibold
+                w-full max-w-25
+                ${styles.tag}
+                ${currentTheme == 'dark'
+                  ? 'bg-(--color-tertiary)/10 text-(--color-tertiary) border border-(--color-tertiary)/30 hover:bg-(--color-tertiary)/20'
+                  : 'bg-(--color-tertiary)/10 text-(--color-tertiary) border border-(--color-tertiary)/20 hover:bg-(--color-tertiary)/15'
+                }
+              `}
+              dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(hobby)}}
+            />
+          </li>
+        )
+    })
+    
+    return (
+      <AboutWidget
+        id={widget.id}
+        title={widget.title[currentLang]}
+        content={(
+          <ul id='hobbies-list'
+            className={`
+              font-primary-regular
+              2xl:text-2xs
+              tracking-wide
+              space-y-4
+              grid grid-cols-2
+              gap-x-4
+            `}
+          > {contentList} </ul>
+        )}
+        titleAdditionnalStyle="text-lg font-bold mb-4"
+        contentStyle={``}
+      />
+    );
+  }
+
+  const hobbiesWidget = useMemo(() => {
+    return tagsWidget("hobbies");
+  }, [currentLang]);
+  
+  const interestsWidget = useMemo(() => {
+    return tagsWidget("interests");
+  }, [currentLang]);
+
+  const textWidget = (widgetId: string) => {
+    const widget = aboutWidgets.find((widget) => widget.id == widgetId);
+    if (!widget) return null;
+
+    return (
+      <AboutWidget
+        id={widget.id}
+        title={widget.title[currentLang]}
+        content={(<p dangerouslySetInnerHTML={{__html: DOMPurify.sanitize((widget.content as MultilingualContent)[currentLang])}} />)}
+        titleAdditionnalStyle="text-lg font-bold mb-2"
+        contentStyle=""
+      />
+    );
+  }
+
+  const currentlyWidget = useMemo(() => {
+    return textWidget("currently");
+  }, [currentLang]);
+
+  const futureWidget = useMemo(() => {
+    return textWidget("future");
+  }, [currentLang]);
+
 
   return (
     <section id="about"
@@ -34,7 +155,6 @@ const About = () => {
         ${styles.sizeFull}
         ${getActiveBreakpoint('number') as number <= 1 ? styles.flexCol : styles.flexRow}
         ${styles.contentStartY}
-        2xl:space-x-5 lg:space-x-15
         overflow-hidden
       `}
     >
@@ -45,20 +165,21 @@ const About = () => {
           w-5/12
           h-fit
           relative
-          space-y-[6%]
+          space-y-12
         `}
       >
         <div className="relative w-fit">
-          <div className="
-            absolute
-            top-3 left-3
-            w-full h-full
-            rounded-[5px]
-            border-2 border-(--color-tertiary)/40
-            pointer-events-none
-          " />
-          <img src={coreImages.portrait}
-            alt="author-portrait"
+          <div className={`
+              absolute
+              top-4 left-6
+              w-full h-full
+              rounded-[5px]
+              border-2 border-(--color-tertiary)/40
+              pointer-events-none
+            `}
+          />
+          <img src={coreImages.portrait.content[currentTheme]}
+            alt={coreImages.portrait.alt}
             className="
               object-cover
               object-center
@@ -96,17 +217,23 @@ const About = () => {
       </div>
 
       <div id="about-info"
-        className=
-        {`
-          ${styles.sizeFit}
+        className={`
+          ${styles.sizeFull}
           ${styles.flexCol}
           ${styles.contentStartAll}
+          overflow-hidden
         `}
       >
         <h2 dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(bioText.find((e) => e.active)!.title[currentLang])}}
           className=
           {`
-            ${styles.heading2}
+            font-primary-bold
+            2xl:text-3xl xl:text-2xl lg:text-xl md:text-xl text-md
+            xl:leading-8 base:leading-6
+            w-full
+            tracking-wider
+            xl:mb-6 lg:mb-6 mb-4
+            text-(--color-quaternary)
           `}
         />
 
@@ -123,136 +250,89 @@ const About = () => {
             `}
           >
             <div className={`md:flex-1`}>
-              <h3 className="
-                font-primary-semibold
-                2xl:text-md xl:text-md md:text-sm text-2xs
-                text-(--color-tertiary)
-                mb-2
-              "> {aboutSection.title[currentLang]} </h3>
-              <p dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(aboutSection.content[currentLang])}}
+              <p ref={aboutTextRef}
+                dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(aboutSection.content[currentLang])}}
                 className={`
                   font-primary-regular
-                  2xl:text-md xl:text-lg md:text-md base:text-2xs
+                  2xl:text-lg xl:text-lg md:text-md base:text-2xs
                   leading-[145%] base:leading-[140%]
                   tracking-wide
                   text-wrap
                   whitespace-pre-line
                   2xl:pr-[3.5%]
+                  overflow-hidden
                 `}
               />
-            </div>
-
-            <div className={`md:flex-1`}>
-              <h3 className="
-                font-primary-semibold
-                2xl:text-md xl:text-md md:text-sm text-2xs
-                text-(--color-tertiary)
-                mb-2
-              "> {aboutSection.title[currentLang]} </h3>
-              <p dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(aboutSection.content[currentLang])}}
-                className={`
-                  font-primary-regular
-                  2xl:text-md xl:text-lg md:text-md base:text-2xs
-                  leading-[145%] base:leading-[140%]
-                  tracking-wide
-                  text-wrap
-                  whitespace-pre-line
-                  2xl:pr-[3.5%]
-                `}
-              />
-            </div>
-          </div>
-
-          {/* Right column — stacked widgets */}
-          <div className={`
-            ${styles.flexCol}
-            xl:gap-5 lg:gap-4 gap-3
-            md:w-5/12
-          `}>
-            {/* Languages widget */}
-            <div className={widgetCard}>
-              <h3 className="
-                font-primary-semibold
-                2xl:text-md xl:text-md md:text-sm text-2xs
-                text-(--color-tertiary)
-                mb-2
-              "> {currentLang === "fr" ? "Langues" : "Languages"} </h3>
-              <ul className="
-                font-primary-regular
-                2xl:text-md xl:text-lg md:text-md base:text-2xs
-                tracking-wide
-                space-y-0.5
-              ">
-                {aboutLanguages.map((lang) => (
-                  <li key={lang.label.en}>
-                    <span className="font-primary-semibold">{lang.label[currentLang]}</span>
-                    {" — "}
-                    <span className="opacity-70">{lang.level[currentLang]}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Stack widget */}
-            <div className={widgetCard}>
-              <h3 className="
-                font-primary-semibold
-                2xl:text-md xl:text-md md:text-sm text-2xs
-                text-(--color-tertiary)
-                mb-2
-              "> Stack </h3>
-              <div className={`${styles.flexRow} ${styles.flexWrap} gap-3`}>
-                {aboutStack.map((icon) => (
-                  <img
-                    key={icon.label}
-                    src={icon.content[currentTheme]}
-                    alt={icon.alt}
-                    title={icon.alt.replace(" Icon", "")}
-                    className="2xl:w-8 2xl:h-8 xl:w-7 xl:h-7 w-6 h-6"
-                  />
-                ))}
-              </div>
-            </div>
-
-            {/* Motto widget */}
-            <div className={widgetCard}>
-              <h3 className="
-                font-primary-semibold
-                2xl:text-md xl:text-md md:text-sm text-2xs
-                text-(--color-tertiary)
-                mb-2
-              "> Motto </h3>
-              <p className="
-                font-primary-regular italic
-                2xl:text-md xl:text-lg md:text-md base:text-2xs
-                tracking-wide
-              ">
-                &laquo; {motto.content[currentLang]} &raquo;
-              </p>
             </div>
           </div>
         </div>
 
-        <div id="links-container-mobile"
+        <div id='about-widgets-container'
           className={`
+            ${styles.sizeFull}
             ${styles.flexCol}
-            lg:hidden
-            space-y-2
-            pt-5
+            ${styles.contentStartAll}
+            space-y-8
+            mt-8
           `}
         >
-          {aboutLinks.map((ressource) => (
-            ressource.context == "0" ?
-              <Link key={ressource.link}
-                to={ressource.link}
-                className={styles.animatedLink}
-              > {ressource.content[currentLang]} </Link>
-            :
-              <a key={ressource.link}
-                href={ressource.link}
-                className={styles.animatedLink}
-              > {ressource.content[currentLang]} </a>
-          ))}
+          <div id='first-row'
+            className={`
+              ${styles.sizeFull}
+              ${styles.flexRow}
+              ${styles.contentStartX}
+              space-x-6
+              max-w-4/5
+            `}
+          >
+            <div id="widget-1"
+              className={`
+                ${styles.sizeFull}
+                max-w-1/2
+                max-h-100
+              `}
+            > {currentlyWidget} </div>
+
+            <div id="widget-2"
+              className={`
+                ${styles.sizeFull}
+                max-w-1/2
+                max-h-100
+              `}
+            > {futureWidget} </div>
+          </div>
+
+          <div id='second-row'
+            className={`
+              ${styles.sizeFull}
+              ${styles.flexRow}
+              ${styles.contentStartX}
+              space-x-8
+              max-w-4/5
+            `}
+          >
+            <div id="widget-3"
+              className={`
+                w-full
+                h-fit
+                max-w-1/2
+              `}
+            > {languagesWidget} </div>
+
+            <div id="widget-4"
+              className={`
+                ${styles.sizeFull}
+                max-w-1/3
+              `}
+            > {interestsWidget} </div>
+
+            <div id="widget-5"
+              className={`
+                ${styles.sizeFull}
+                max-w-1/3
+              `}
+            > {hobbiesWidget} </div>
+          </div>
         </div>
       </div>
 
@@ -277,8 +357,8 @@ const About = () => {
             border-2 border-(--color-tertiary)/40
             pointer-events-none
           " />
-          <img src={coreImages.portrait}
-            alt="author-portrait"
+          <img src={coreImages.portrait.content[currentTheme]}
+            alt={coreImages.portrait.alt}
             className="
               object-cover
               object-center

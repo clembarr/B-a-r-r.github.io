@@ -1,13 +1,14 @@
-import { useContext } from 'react';
+import { useContext, useRef } from 'react';
 import { Link } from 'react-router';
 import { motion } from 'framer-motion';
 import { BlogPost } from '../../assets/dataTypes';
 import { UNIVERSAL_LANG } from '../../assets/i18n';
 import { LangContext } from '../language';
-import { author, placeholderMessages } from '../../assets/constants';
-import { formatBlogDate } from '../../utils';
-import styles from '../../style';
 import { ThemeContext } from '../theme/ThemeEngine';
+import { author, placeholderMessages } from '../../assets/constants';
+import { formatBlogDate, handleMouseEnter, handleMouseLeave, handleMouseMove } from '../../utils';
+import styles from '../../style';
+import Card from '../cards/Card';
 
 type BlogCardProps = {
   post: BlogPost;
@@ -16,11 +17,15 @@ type BlogCardProps = {
 
 /**
  * @component BlogCard
- * @description Card component for displaying blog post preview in listing
+ * @description Card component for displaying blog post preview in listing.
+ * Composes the shared Card component (title-description-tags) with
+ * blog-specific header (category badge + date) and footer (author + reading time).
+ * Uses the same 3D tilt effect as ProjectCard.
  */
 const BlogCard = ({ post, index = 0 }: BlogCardProps) => {
   const { currentLang } = useContext(LangContext);
   const { currentTheme } = useContext(ThemeContext);
+  const cardRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const title = post.title[currentLang] || post.title[UNIVERSAL_LANG];
@@ -28,6 +33,7 @@ const BlogCard = ({ post, index = 0 }: BlogCardProps) => {
   const blogUrl = `/blog/${post.slug}`;
   const tags = post.tags[currentLang] || post.tags[UNIVERSAL_LANG] || [];
   const minRead = placeholderMessages.find((m) => m.context === "blogMinRead")!.content[currentLang];
+  const isDark = currentTheme === 'dark';
 
   return (
     <motion.div
@@ -38,26 +44,50 @@ const BlogCard = ({ post, index = 0 }: BlogCardProps) => {
         delay: prefersReducedMotion ? 0 : index * 0.1,
         ease: [0.25, 0.1, 0.25, 1],
       }}
-      whileHover={prefersReducedMotion ? {} : {
-        scale: 1.02,
-        transition: { duration: 0.2 }
-      }}
       className="h-full"
+      style={{ perspective: '1000px' }}
     >
-      <Link to={blogUrl} className="block h-full">
-        <article
-          className={`
-            ${styles.flexCol}
-            h-full
-            bg-(--color-secondary)
-            rounded-lg
-            overflow-hidden
-            shadow-lg
-            hover:shadow-2xl
-            transition-shadow
-            duration-300
-          `}
-        >
+      <div
+        ref={cardRef}
+        className={`
+          group
+          h-full
+          ${styles.flexCol}
+          ${styles.easeOutTransition}
+          rounded-lg
+          overflow-hidden
+          cursor-pointer
+          ${isDark
+            ? `
+              bg-(--color-secondary)
+              border border-(--color-quinary)
+              shadow-lg
+              hover:border-(--color-tertiary)/30
+              hover:shadow-[0_8px_30px_rgba(0,0,0,0.4)]
+            `
+            : `
+              bg-(--color-secondary)
+              shadow-lg
+              hover:shadow-2xl
+            `
+          }
+        `}
+        onMouseLeave={() => handleMouseLeave(cardRef.current)}
+        onMouseMove={(e) => handleMouseMove(e, cardRef.current)}
+        onMouseEnter={() => handleMouseEnter(cardRef.current)}
+      >
+        {/* Top highlight line on hover */}
+        <div className={`
+          absolute
+          top-0 left-0 right-0
+          h-0.75
+          transition-all duration-300
+          bg-linear-to-r from-(--color-tertiary)/0 via-(--color-tertiary) to-(--color-tertiary)/0
+          opacity-0 group-hover:opacity-100
+        `} />
+
+        <Link to={blogUrl} className={`block h-full ${styles.flexCol}`}>
+
           {/* Cover Image */}
           {post.coverImage && (
             <div className="w-full h-36 overflow-hidden">
@@ -71,17 +101,18 @@ const BlogCard = ({ post, index = 0 }: BlogCardProps) => {
           )}
 
           <div className={`
-              p-4 
-              ${styles.flexCol} 
-              grow 
+              p-4
+              ${styles.flexCol}
+              grow
               space-y-5
             `}
           >
+            {/* Header: category badge + date */}
             <div className={`
-                flex 
-                items-center 
-                justify-between 
-                gap-2 
+                flex
+                items-center
+                justify-between
+                gap-2
                 flex-wrap
                 text-sm
               `}
@@ -89,7 +120,7 @@ const BlogCard = ({ post, index = 0 }: BlogCardProps) => {
               <span
                 className={`
                   bg-orange-400
-                  ${currentTheme === 'dark' ? 'text-white' : 'text-(--color-primary)'}
+                  ${isDark ? 'text-white' : 'text-(--color-primary)'}
                   px-2.5
                   py-0.5
                   rounded-full
@@ -109,57 +140,16 @@ const BlogCard = ({ post, index = 0 }: BlogCardProps) => {
               </time>
             </div>
 
-            <h2
-              className="
-                font-primary-bold
-                text-md
-                leading-snug
-                text-(--color-quaternary)
-                line-clamp-2
-              "
-            > {title} </h2>
+            <Card title={title}
+              content={description}
+              tags={tags}
+              moreTopClasses="space-y-3 grow space-y-4"
+              titleProps="text-md leading-snug mt-4 group-hover:text-(--color-tertiary) transition-colors duration-300"
+              contentProps="text-xs opacity-80 line-clamp-3"
+              tagsProps="text-2xs"
+            />
 
-            <p
-              className="
-                font-primary-regular
-                text-xs
-                leading-relaxed
-                text-(--color-quaternary)
-                opacity-80
-                line-clamp-3
-                grow
-                mb-6
-              "
-            > {description} </p>
-
-            {tags.length > 0 && (
-              <div 
-              className="flex flex-wrap gap-1.5">
-                {tags.slice(0, 3).map((tag, i) => (
-                  <span
-                    key={i}
-                    className={`
-                      ${styles.tag}
-                      text-3xs
-                    `}
-                  >
-                    {tag}
-                  </span>
-                ))}
-                {tags.length > 3 && (
-                  <span className="
-                    inline-flex items-center
-                    px-2 py-0.5
-                    text-2xs font-primary-regular
-                    text-(--color-quaternary) opacity-50
-                  ">
-                    +{tags.length - 3}
-                  </span>
-                )}
-              </div>
-            )}
-
-            <div
+            <div id='footer-infos'
               className="
                 flex
                 items-center
@@ -178,8 +168,8 @@ const BlogCard = ({ post, index = 0 }: BlogCardProps) => {
               </span>
             </div>
           </div>
-        </article>
-      </Link>
+        </Link>
+      </div>
     </motion.div>
   );
 };

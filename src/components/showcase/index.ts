@@ -9,6 +9,8 @@ import HexagonGrid from './HexagonGrid';
 import PerspectiveCards from './PerspectiveCards';
 import FlowingPath from './FlowingPath';
 import MathSpiral from './MathSpiral';
+import SkillTreeRPG from './SkillTreeRPG';
+import SkillGalaxy from './SkillGalaxy';
 
 export {
   OrbitingSkills,
@@ -17,4 +19,6 @@ export {
   PerspectiveCards,
   FlowingPath,
   MathSpiral,
+  SkillTreeRPG,
+  SkillGalaxy,
 };

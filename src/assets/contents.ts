@@ -11,6 +11,7 @@ import {
   CareerEntryType,
   GraphicAsset,
   FooterColumn,
+  AboutWidget,
 } from "./dataTypes";
 import { navLinks, creditsMentions } from "./constants";
 
@@ -411,90 +412,81 @@ export const footerColumns: FooterColumn[] = [
   },
 ];
 
-/** Mottos displayed randomly in the About dashboard. */
-export const aboutMottos: Array<Biography> = [
-  { 
+/** About section widgets titles and content. */
+export const aboutWidgets: Array<AboutWidget> = [
+  {
+    id: "currently",
+    title: 
+    {
+      fr: "Actuellement",
+      en: "Currently working on",
+    },
+    content:
+    {
+      fr: "En dernière année <strong>BUT Informatique</strong> à <strong>l'IUT de Bordeaux.</strong>",
+      en: "In my last year of <strong>Bachelor degree in Computer Science</strong> at the <strong>IUT of Bordeaux.</strong>",
+    },
+  },
+  {
+    id: "future",
+    title: 
+    {
+      fr: "Pour l'avernir",
+      en: "For the future",
+    },
+    content:
+    {
+      fr: "Entrer en école d'ingénieur et, à terme, travailler à la frontière entre l'ingénierie et la recherche.",
+      en: "Enter engineering school and, eventually, work at the frontier between engineering and research.",
+    },
+  },
+  {
+    id: "hobbies",
     title: {
-      fr: "",
-      en: "",
+      fr: "Hobbies",
+      en: "Hobbies",
     },
     content: {
-      fr: "Développer un futur libre et équitable.",
-      en: "Develop the future, free and fair.",
-    },
-    active: true,
+      fr: ["Natation", "Philo", "Dev", "Musique"],
+      en: ["Swimming", "Philo", "Dev", "Music"],
+    }
   },
-  { 
+  {
+    id: "interests",
     title: {
-      fr: "",
-      en: "",
+      fr: "Intérêts",
+      en: "Interests",
     },
     content: {
-      fr: "L'utilité au service du plus grand nombre.",
-      en: "Utility at the service of everyone.",
-    },
-    active: true,
+      fr: ["ALife", "IA", "Biologie", "Logiciel"],
+      en: ["ALife", "AI", "Biology", "Software"],
+    }
   },
-  { 
+  {
+    id: "lang",
     title: {
-      fr: "",
-      en: ""
+      fr: "Langues",
+      en: "Languages",
     },
-    content: {
-      fr: "La polyvalence est une force.",
-      en: "Versatility is a strength.",
-    },
-    active: true,
-  },
-  { 
-    title: {
-      fr: "",
-      en: ""
-    },
-    content: {
-      fr: "Coder, c'est donner forme aux idées.",
-      en: "Coding is giving shape to ideas.",
-    },
-    active: true,
-  },
-  { 
-    title: {
-      fr: "",
-      en: ""
-    },
-    content: {
-      fr: "Simplicité, accessibilité, impact.",
-      en: "Simplicity, accessibility, impact.",
-    },
-    active: true,
-  },
-];
-
-/** Languages spoken with proficiency level. */
-export const aboutLanguages = [
-  { label: { fr: "Français", en: "French" }, level: { fr: "Natif", en: "Native" } },
-  { label: { fr: "Anglais", en: "English" }, level: { fr: "Courant (C1)", en: "Fluent (C1)" } },
-  { label: { fr: "Espagnol", en: "Spanish" }, level: { fr: "Notions (A2)", en: "Basic (A2)" } },
-];
-
-/** Location info for About dashboard. */
-export const aboutLocation = {
-  city: "Bordeaux",
-  country: { fr: "France", en: "France" },
-};
-
-/** Core tech stack icons displayed in About dashboard. */
-export const aboutStack: GraphicAsset[] = [
-  skillsIcons.react_icon,
-  skillsIcons.typescript_icon,
-  skillsIcons.python_icon,
-  skillsIcons.tailwind_icon,
-  skillsIcons.go_icon,
-  skillsIcons.docker_icon,
+    content: [
+      {
+        label: { fr: "🇫🇷 Français", en: "🇫🇷 French" },
+        level: { fr: "Natif", en: "Native" },
+      },
+      {
+        label: { fr: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Anglais", en: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 English" },
+        level: { fr: "Courant (C1)", en: "Fluent (C1)" },
+      },
+      {
+        label: { fr: "🇪🇸 Espagnol", en: "🇪🇸 Spanish" },
+        level: { fr: "Notions (A2)", en: "Basic (A2)" },
+      }
+    ]
+  }
 ];
 
 /** About me text block for the About dashboard. */
-export const aboutSection = {
+export const aboutSection: { title: {[lang: string]: string}; content: {[lang: string]: string} } = {
   title: { fr: "À propos de moi", en: "About me" },
   content: {
     fr:
@@ -507,7 +499,7 @@ export const aboutSection = {
 };
 
 /** Page title and subtitle for the Career page. */
-export const careerPageContent = {
+export const careerPageContent: { title: {[lang: string]: string}; subtitle: {[lang: string]: string} } = {
   title: {
     fr: "Mon Parcours",
     en: "My Career Path",
@@ -559,26 +551,6 @@ export const careerTimeline: Array<CareerEntry> = [
       en: "Certification covering cloud computing fundamentals: virtualization, containerization, managed services and security best practices.",
     },
     tags: ["Cloud", "DevOps", "Docker"],
-  },
-  {
-    type: CareerEntryType.PROJECT,
-    title: {
-      fr: "Portfolio personnel",
-      en: "Personal portfolio",
-    },
-    organization: {
-      fr: "Projet personnel",
-      en: "Personal project",
-    },
-    period: {
-      fr: "Sept. 2024 — Présent",
-      en: "Sep. 2024 — Present",
-    },
-    description: {
-      fr: "Conception et développement de ce portfolio avec React, TypeScript et Tailwind CSS. Intégration de fonctionnalités avancées : animations, blog, PWA, SEO.",
-      en: "Design and development of this portfolio with React, TypeScript and Tailwind CSS. Integration of advanced features: animations, blog, PWA, SEO.",
-    },
-    tags: ["React", "TypeScript", "Tailwind", "Vite"],
   },
   {
     type: CareerEntryType.EDUCATION,

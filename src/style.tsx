@@ -164,7 +164,6 @@ const styles = {
     focus:outline-none
   `,
 
-  // Tag/Badge styles
   tag: `
     inline-flex items-center
     px-2.5 py-1
@@ -174,19 +173,20 @@ const styles = {
     bg-(--color-tertiary)/10
     text-(--color-tertiary)
     border border-(--color-tertiary)/20
+    transition-all duration-300 ease-in-out
+    cursor-pointer
   `,
 
-  // Animated link (tertiary color + slide-right on hover)
   animatedLink: `
     inline-flex items-center gap-2
     text-(--color-tertiary)
     hover:translate-x-1.5
+    hover:text-(--color-quaternary)
     cursor-pointer
     font-secondary-semibold
     transition-all duration-300 ease-in-out
   `,
 
-  // Dividers
   divider: `
     w-full h-px
     bg-(--color-border)
@@ -197,7 +197,6 @@ const styles = {
     bg-(--color-border)
   `,
 
-  // Glass effects
   glass: `
     bg-white/5
     backdrop-blur-md
@@ -226,7 +225,6 @@ const styles = {
     shadow-(--shadow-lg)
   `,
 
-  // Hero styles
   heroHeading: `
     font-primary-bold
     2xl:text-6xl xl:text-5xl lg:text-4xl md:text-3xl text-2xl
@@ -242,6 +240,13 @@ const styles = {
     bg-clip-text
     text-transparent
     bg-[length:200%_auto]
+  `,
+
+  widgetCard: `
+    px-4 py-3cc
+    rounded-lg
+    bg-(--color-secondary)
+    border border-(--color-tertiary)/15
   `,
 
   debugBorders: `border-2 border-`.concat(getRandomTailwindColor()),

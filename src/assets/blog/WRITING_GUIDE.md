@@ -38,21 +38,24 @@ export const monArticle: BlogPost = {
 
 ## Rédiger les paragraphs
 
-Chaque entrée du tableau `paragraphs` est une section de l'article :
+Chaque entrée du tableau `paragraphs` est un `PostParagraph` (section de l'article) :
 
 ```ts
 {
-  context: "Titre de la section",   // rendu comme <h2>, sert aussi d'ancre pour la TOC
+  title: {
+    [UNIVERSAL_LANG]: "Section Title",  // rendu comme <h2>, sert aussi d'ancre pour la TOC
+    fr: "Titre de la section",
+  },
   content: {
-    [UNIVERSAL_LANG]: "...",        // contenu HTML en anglais
-    fr: "...",                      // contenu HTML en français
+    [UNIVERSAL_LANG]: "...",            // contenu HTML en anglais
+    fr: "...",                          // contenu HTML en français
   },
 }
 ```
 
-- `context` = titre de section (rendu en `<h2>` avec un `id` auto-généré depuis le texte).
-- `content` = corps HTML de la section. **Pas de `<h2>`** dans le content (c'est `context` qui s'en charge).
-- Pour une intro sans titre, mettre `context: undefined` ou l'omettre.
+- `title` = titre de section multilingue (rendu en `<h2>` avec un `id` auto-généré depuis le texte). Optionnel.
+- `content` = corps HTML de la section. **Pas de `<h2>`** dans le content (c'est `title` qui s'en charge).
+- Pour une intro sans titre, omettre la clé `title`.
 
 ---
 
@@ -124,7 +127,27 @@ Utiliser `\n\n` dans la string TS pour séparer les blocs. Un simple `\n` crée 
 
 ## Insérer des images
 
-Les images utilisent le pattern `[[image x]]` où `x` est l'index dans le tableau `img` du post :
+Les images utilisent le pattern `[[image x]]` où `x` est l'index dans le tableau `img` du post.
+Des paramètres optionnels de taille et positionnement peuvent être ajoutés après un `|` :
+
+```
+[[image x]]                       → pleine largeur (w-full), pas de positionnement
+[[image x | w=50% center]]        → largeur 50%, centré
+[[image x | w=300px right]]       → largeur 300px, aligné à droite
+[[image x | w=20rem]]             → largeur 20rem, pas de positionnement
+[[image x | center]]              → pleine largeur, centré
+```
+
+### Paramètres disponibles
+
+| Paramètre | Syntaxe | Description | Défaut |
+|-----------|---------|-------------|--------|
+| Largeur | `w=<valeur CSS>` | Appliqué en inline style `width: <valeur>` | `w-full` (classe Tailwind) |
+| Position | `center` / `left` / `right` | Enveloppe l'image dans un conteneur flex avec `justify-center/start/end` | aucun (pas de conteneur) |
+
+> La `<valeur>` de `w=` est une valeur CSS standard : `50%`, `300px`, `20rem`, `66.6%`, etc.
+
+### Exemple complet
 
 ```ts
 // Dans la définition du post :
@@ -132,14 +155,14 @@ img: [monImage1, monImage2],
 
 // Dans le content :
 content: {
-  [UNIVERSAL_LANG]: "Voici le diagramme :\n\n[[image 0]]\n\nComme on peut le voir...",
+  [UNIVERSAL_LANG]: "Voici le diagramme :\n\n[[image 0 | w=66% center]]\n\nComme on peut le voir...\n\n[[image 1]]",
 }
 ```
 
-- `[[image 0]]` → affiche `img[0]`
-- `[[image 1]]` → affiche `img[1]`
+- `[[image 0]]` → affiche `img[0]` en pleine largeur
+- `[[image 1 | w=50% center]]` → affiche `img[1]` en demi-largeur, centré
 - Le pattern peut être placé n'importe où dans le texte, y compris entre deux phrases.
-- L'image est rendue en pleine largeur avec coins arrondis et ombre.
+- L'image est toujours rendue avec coins arrondis et ombre (`rounded-lg shadow-lg`).
 
 ---
 

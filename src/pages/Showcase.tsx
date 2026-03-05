@@ -17,9 +17,13 @@ import {
   PerspectiveCards,
   FlowingPath,
   MathSpiral,
+  SkillTreeRPG,
+  SkillGalaxy,
 } from '../components/showcase';
 import styles from '../style';
 import { MetaTags, StructuredData, websiteSchema } from '../components/seo';
+import { skills, careerTimeline } from '../assets/contents';
+import { AvailableSkillSubcategories } from '../assets/dataTypes';
 
 /**
  * @description Showcase page presenting innovative visualization components.
@@ -133,6 +137,125 @@ const Showcase = () => {
     { id: 's11', label: 'Security', size: 'lg' as const },
     { id: 's12', label: 'DevOps', size: 'sm' as const },
   ];
+
+  // --- SkillTreeRPG data ---
+  const branchColors: Record<string, string> = {
+    WEB: '#7CFFC4',
+    SOFTWARE: '#FF6B6B',
+    DATABASE: '#4ECDC4',
+    BIGDATA: '#FFE66D',
+    FORMATING: '#A78BFA',
+    OTHER: '#71cbb3',
+  };
+
+  type SkillTreeNode = {
+    id: string;
+    label: string;
+    level?: number;
+    children?: SkillTreeNode[];
+    color?: string;
+  };
+
+  const skillTree: SkillTreeNode = {
+    id: 'root',
+    label: 'DEV',
+    children: [
+      ...Object.values(AvailableSkillSubcategories).map(sub => ({
+        id: sub,
+        label: sub,
+        color: branchColors[sub],
+        children: skills
+          .filter(s => s.subcategory?.context === sub)
+          .map(s => ({ id: s.label, label: s.label, level: s.weight ?? 5 })),
+      })).filter(branch => branch.children.length > 0),
+      // Skills without subcategory
+      ...(skills.filter(s => !s.subcategory).length > 0
+        ? [{
+            id: 'OTHER',
+            label: 'OTHER',
+            color: branchColors.OTHER,
+            children: skills
+              .filter(s => !s.subcategory)
+              .map(s => ({ id: s.label, label: s.label, level: s.weight ?? 5 })),
+          }]
+        : []),
+    ],
+  };
+
+  // --- SkillGalaxy data ---
+  type GalaxyNode = {
+    id: string;
+    label: string;
+    x: number;
+    y: number;
+    size: number;
+    cluster: string;
+    color: string;
+  };
+
+  type GalaxyLink = {
+    source: string;
+    target: string;
+    type: 'framework' | 'career';
+  };
+
+  const clusterCenters: Record<string, { x: number; y: number }> = {
+    WEB: { x: 0.25, y: 0.25 },
+    SOFTWARE: { x: 0.75, y: 0.25 },
+    DATABASE: { x: 0.85, y: 0.55 },
+    BIGDATA: { x: 0.65, y: 0.8 },
+    FORMATING: { x: 0.25, y: 0.8 },
+    OTHER: { x: 0.5, y: 0.5 },
+  };
+
+  const galaxyNodes: GalaxyNode[] = skills.map((s, i) => {
+    const cluster = s.subcategory?.context ?? 'OTHER';
+    const center = clusterCenters[cluster];
+    const angle = (i * 2.4) * (Math.PI / 180) * 50;
+    const radius = 0.08 + (i % 5) * 0.02;
+    return {
+      id: s.label,
+      label: s.label,
+      x: Math.max(0.05, Math.min(0.95, center.x + Math.cos(angle) * radius)),
+      y: Math.max(0.05, Math.min(0.95, center.y + Math.sin(angle) * radius)),
+      size: (s.weight ?? 5) * 3,
+      cluster,
+      color: branchColors[cluster] ?? branchColors.OTHER,
+    };
+  });
+
+  const galaxyLinks: GalaxyLink[] = [];
+  // Framework links
+  skills.forEach(s => {
+    if (s.framework) {
+      const parent = skills.find(p => p.label === s.framework);
+      if (parent) galaxyLinks.push({ source: s.label, target: parent.label, type: 'framework' });
+    }
+  });
+  // Career links (skills sharing a tag in careerTimeline)
+  const tagToSkillLabels = new Map<string, Set<string>>();
+  careerTimeline.forEach(entry => {
+    entry.tags?.forEach(tag => {
+      const matching = skills.filter(s => s.label === tag);
+      matching.forEach(m => {
+        if (!tagToSkillLabels.has(entry.title.en)) tagToSkillLabels.set(entry.title.en, new Set());
+        tagToSkillLabels.get(entry.title.en)!.add(m.label);
+      });
+    });
+  });
+  const careerPairsSeen = new Set<string>();
+  tagToSkillLabels.forEach(labelSet => {
+    const arr = Array.from(labelSet);
+    for (let a = 0; a < arr.length; a++) {
+      for (let b = a + 1; b < arr.length; b++) {
+        const key = [arr[a], arr[b]].sort().join('|');
+        if (!careerPairsSeen.has(key)) {
+          careerPairsSeen.add(key);
+          galaxyLinks.push({ source: arr[a], target: arr[b], type: 'career' });
+        }
+      }
+    }
+  });
 
   // Section component for consistent styling
   const Section = ({
@@ -319,6 +442,26 @@ const Showcase = () => {
             title={currentLang === 'fr' ? 'Croissance' : 'Growth'}
             subtitle={currentLang === 'fr' ? 'Suivant le ratio d\'or φ' : 'Following the golden ratio φ'}
           />
+        </Section>
+
+        {/* 7. Skill Tree RPG */}
+        <Section
+          title={currentLang === 'fr' ? 'Arbre de Compétences' : 'Skill Tree'}
+          subtitle={currentLang === 'fr'
+            ? 'Un arbre RPG où chaque branche représente un domaine de compétences, avec barres d\'XP et niveaux.'
+            : 'An RPG tree where each branch represents a skill domain, with XP bars and levels.'}
+        >
+          <SkillTreeRPG root={skillTree} />
+        </Section>
+
+        {/* 8. Skill Galaxy */}
+        <Section
+          title={currentLang === 'fr' ? 'Galaxie de Compétences' : 'Skill Galaxy'}
+          subtitle={currentLang === 'fr'
+            ? 'Une constellation où chaque étoile est une compétence, reliée par des liens de frameworks et d\'expériences.'
+            : 'A constellation where each star is a skill, connected by framework and experience links.'}
+        >
+          <SkillGalaxy nodes={galaxyNodes} links={galaxyLinks} />
         </Section>
 
         {/* Footer Note */}

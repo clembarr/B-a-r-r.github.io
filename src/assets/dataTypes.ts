@@ -1,10 +1,9 @@
-
+import { MultilingualContent, MultilingualContentArray } from "./i18n";
 
 /** The career entry types supported by the app. */
 export enum CareerEntryType {
   EDUCATION = "EDUCATION",
   EXPERIENCE = "EXPERIENCE",
-  PROJECT = "PROJECT",
   CERTIFICATION = "CERTIFICATION",
   VOLUNTEERING = "VOLUNTEERING",
 }
@@ -13,6 +12,7 @@ export enum CareerEntryType {
  * Structure of a career timeline entry.
  * @param type - type of the career entry
  * @param title - title of the entry (multilingual)
+ * @param icon - icon image of the entry (optional)
  * @param organization - organization name (multilingual)
  * @param period - time period (multilingual)
  * @param description - description of the entry (multilingual)
@@ -20,10 +20,11 @@ export enum CareerEntryType {
  */
 export interface CareerEntry {
   type: CareerEntryType;
-  title: {[lang: string]: string};
-  organization: {[lang: string]: string};
-  period: {[lang: string]: string};
-  description: {[lang: string]: string};
+  title: MultilingualContent;
+  icon?: string;
+  organization: MultilingualContent;
+  period: MultilingualContent;
+  description: MultilingualContent;
   tags?: string[];
 }
 
@@ -107,12 +108,17 @@ export enum Errors {
  * @param specs - specifications of the project
  * @param notions - notions used in the project
  * @param tools - list of tools used in the project
+ * @param additionalRessources - list of additional ressources to link
+ * @param favorite - if the project is marked as favorite
+ * @param relatedPosts - list of related blog posts (titles)
  */
 export interface Retex extends Project {
-  specs: {[lang: string]: string};
-  notions: {[lang: string]: string[]};
+  specs: MultilingualContent;
+  notions: MultilingualContentArray;
   tools: Skill[];
   additionalRessources?: Hyperlink[];
+  favorite?: boolean;
+  relatedPosts?: string[];
 }
 
 /**
@@ -124,9 +130,9 @@ export interface Retex extends Project {
  * @param date - date of the project
  */
 export interface Project {
-  title: {[lang: string]: string};
-  description: {[lang: string]: string};
-  tags: {[lang: string]: string[]};
+  title: MultilingualContent;
+  description: MultilingualContent;
+  tags: MultilingualContentArray;
   img?: string[];
   date: Date;
 }
@@ -164,7 +170,7 @@ export interface SocialMedia {
  * @param active - true if the biography is displayed, else false
  */
 export interface Biography extends Message {
-  title: {[lang: string]: string};
+  title: MultilingualContent;
   active: boolean;
 }
 
@@ -234,7 +240,7 @@ export interface EmailAPI {
  * @param tentativeCooldown - cooldown time before the user can try again after being blocked
  */
 export interface ContactForm {
-  title: {[lang: string]: string};
+  title: MultilingualContent;
   messageMinLength?: number;
   fields: {[field: string]: Message};
   mendatoryFields: string[];
@@ -278,7 +284,7 @@ export interface Author {
 */
 export interface Message {
   context?: string;
-  content: {[lang: string]: string};
+  content: MultilingualContent;
 }
 
 /**
@@ -306,7 +312,7 @@ export interface FlashMessage extends Message {
  * @param content - the data to render, varying by context
  */
 export interface FooterColumn {
-  title: {[lang: string]: string};
+  title: MultilingualContent;
   context: string;
   content: Hyperlink[] | CreditMention[] | NavbarPattern[];
 }
@@ -357,22 +363,71 @@ export interface TableOfContentsItem {
 }
 
 /**
+ * A paragraph/section of a blog post.
+ * @param title - multilingual section heading (rendered as `<h2>`, used as TOC anchor)
+ * @param content - multilingual HTML body of the section.
+ *    Images are indicated by `[[image x]]` anywhere in the content, x being the image
+ *    index in the post's `img[]` list. This pattern is replaced by the image at rendering.
+ */
+export interface PostParagraph {
+  title?: MultilingualContent;
+  content: MultilingualContent;
+}
+
+/**
  * Complete blog post structure.
  * @param slug - URL identifier
  * @param coverImage - optional cover image URL
  * @param readingTime - estimated reading time in minutes
  * @param category - category of the post
- * @param paragraphs - list of content paragraphs,
- *    * context key from extended Message interface is used for paragraph title,
- *    * images have to be indicated by `[[image x]]` anywher in the content, x being the image 
- *        index in post images list. This pattern will be replaced by the image at rendering.
- * @param tableOfContents - table of content if wanted
+ * @param paragraphs - list of content paragraphs (PostParagraph[])
+ * @param tableOfContents - if true, auto-generates a TOC from paragraph titles
+ * @param relatedProjects - list of related project (titles)
  */
 export interface BlogPost extends Project {
   slug: string;
   coverImage?: string;
   readingTime?:number;
   category: BlogCategory;
-  paragraphs: Message[];
-  tableOfContents?: {[lang: string]: TableOfContentsItem[]};
+  paragraphs: PostParagraph[];
+  tableOfContents?: boolean;
+  relatedProjects?: string[];
+}
+
+/**
+ * Structure of SEO constants for a page.
+ * @param title - the title of the page
+ * @param description - the description of the page
+ * @param keywords - the keywords for the page
+ * @param ogUrl - the Open Graph URL of the page
+ * @param canonical - the canonical URL of the page
+ */
+export interface SEOConstants {
+  title: string;
+  description: string;
+  keywords: string[];
+  ogUrl: string;
+  canonical: string;
+}
+
+/**
+ * A spoken language with multilingual label and proficiency level.
+ * @param label - multilingual name of the language
+ * @param level - multilingual proficiency level
+ */
+export interface LanguageLevel {
+  label: MultilingualContent;
+  level: MultilingualContent;
+}
+
+/**
+ * Structure of a widget in the about section.
+ * @param id - unique identifier for the widget
+ * @param title - multilingual title of the widget
+ * @param content - plain multilingual text, string array, or language levels list
+ */
+export interface AboutWidget {
+  id: string;
+  title: MultilingualContent;
+  content: MultilingualContent | MultilingualContentArray | LanguageLevel[];
 }

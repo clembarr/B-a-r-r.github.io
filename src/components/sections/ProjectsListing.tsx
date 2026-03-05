@@ -11,6 +11,7 @@ import { RetexViewer, RetexContext } from "../retex";
 import { getActiveBreakpoint, randomNumberBetween } from "../../utils";
 import { noDataMessages, sortOptions } from "../../assets/constants";
 import { ThemeContext } from "../theme/ThemeEngine";
+import { ScrollReveal } from "../animations";
 
 
 const ProjectsListing = () => {
@@ -27,6 +28,8 @@ const ProjectsListing = () => {
             switch (filter) {
                 case "ALL":
                     matchingProjects.push(project);
+                    //favorite projects first
+                    matchingProjects.sort((a, b) => a.favorite === b.favorite ? randomNumberBetween(0,1) === 0 ? 1 : -1 : !a.favorite ? 1 : -1);
                     break;
                 case "NEWEST":
                     matchingProjects.push(project);
@@ -59,7 +62,7 @@ const ProjectsListing = () => {
             }
         }))
         setDisplayedProjects(
-            toMatch.includes("NEWEST") || toMatch.includes("OLDEST") ?
+            toMatch.includes("NEWEST") || toMatch.includes("OLDEST") || toMatch.includes("ALL") ? 
             matchingProjects : matchingProjects.sort(() => randomNumberBetween(0,1) === 0 ? 1 : -1)
         );
     }, [toMatch]);
@@ -120,20 +123,22 @@ const ProjectsListing = () => {
             relative
         `}
     >
-        <div id='search-options-container'
-            className=
-            {`
-                w-full
-                h-fit
-                ${getActiveBreakpoint("number") as number > 1 ? styles.flexRow + " space-x-40" : styles.flexCol}
-                ${styles.contentCenter}
-                mr-30
-            `}
-        >
-            <Searchbar />
-            
-            <Sortingbar options={sortOptions} />
-        </div>
+        <ScrollReveal direction="up" delay={0.2}>
+            <div id='search-options-container'
+                className=
+                {`
+                    w-full
+                    h-fit
+                    ${getActiveBreakpoint("number") as number > 1 ? styles.flexRow + " space-x-40" : styles.flexCol}
+                    ${styles.contentCenter}
+                    mr-30
+                `}
+            >
+                <Searchbar />
+
+                <Sortingbar options={sortOptions} />
+            </div>
+        </ScrollReveal>
         
         <div id='retex-container'
             ref={retexContainerRef}
@@ -160,6 +165,7 @@ const ProjectsListing = () => {
             <RetexViewer />
         </div>
 
+        <ScrollReveal direction="up" delay={0.35} className="w-full">
         <div id="projects-container"
             className=
             {`
@@ -179,6 +185,7 @@ const ProjectsListing = () => {
         >   
             {getProjectsPreviews()}
         </div>
+        </ScrollReveal>
     </section>
     )
 }
