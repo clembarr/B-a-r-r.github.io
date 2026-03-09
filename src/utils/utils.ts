@@ -1,5 +1,6 @@
-import { BlogPost } from "./assets/dataTypes";
-import { navLinks } from "./assets/constants";
+import { BlogPost, Hyperlink } from "../assets/dataTypes";
+import { navLinks } from "../assets/constants";
+import { MultilingualContent, UNIVERSAL_LANG } from "./assetsUtils";
 
 /**
  * @function randomNumberBetween Get a random number between min and max
@@ -17,12 +18,31 @@ export const randomNumberBetween = (min: number, max: number) => {
  * @returns the shuffled array
  */
 export const shuffle = <T>(array: T[]): T[] => {
-  for (let i = array.length - 1; i > 0; i--) { 
-    const j = Math.floor(Math.random() * (i + 1)); 
-    [array[i], array[j]] = [array[j], array[i]]; 
-  } 
-  return array; 
+    for (let i = array.length - 1; i > 0; i--) { 
+        const j = Math.floor(Math.random() * (i + 1)); 
+        [array[i], array[j]] = [array[j], array[i]]; 
+    } 
+    return array;
 }; 
+
+/**
+ * @function getLinkFromTypedLink Resolve a link from a Hyperlink, a multilingual
+ * content object, or a plain string into a single URL string.
+ * @param link - the link to resolve, which can be a Hyperlink (with nested link),
+ *   a MultilingualContent object keyed by language, or a plain string URL.
+ * @param lang - optional language code to select the correct URL from a
+ *   MultilingualContent object. Falls back to UNIVERSAL_LANG if omitted.
+ * @returns the resolved URL string
+ */
+export const getLinkFromTypedLink = (link: Hyperlink | string | MultilingualContent, lang?: string): string => {
+    if (typeof link === "string") {
+        return link;
+    }
+    if ("link" in link) {
+        return getLinkFromTypedLink((link as Hyperlink).link, lang);
+    }
+    return (link[lang || UNIVERSAL_LANG] || link[UNIVERSAL_LANG]);
+}
 
 /**
  * @function getCurrentNavigation Get the current navigation link to highlight in the navbar of the current page
@@ -39,11 +59,11 @@ export const getCurrentNavigation = () => {
     const correspondingNavigation = currentRoute.links.find(
         (navLink) => {
             if (window.location.hash !== "") {
-                return window.location.hash.toLowerCase().includes(navLink.link.split('/')[1].toLowerCase());
+                return window.location.hash.toLowerCase().includes(getLinkFromTypedLink(navLink.link).split('/')[1].toLowerCase());
 
             } else {
                 const pathname = window.location.pathname.toLowerCase();
-                const link = navLink.link.toLowerCase();
+                const link = getLinkFromTypedLink(navLink.link).toLowerCase();
                 return pathname === link
                     || (link !== "/" && pathname.startsWith(link + "/"));
             }
@@ -51,9 +71,9 @@ export const getCurrentNavigation = () => {
     );
 
     if (correspondingNavigation) {
-        return (currentRoute.links.find((nav) => nav.link === correspondingNavigation.link)!).link.toLowerCase();
+        return getLinkFromTypedLink((currentRoute.links.find((nav) => nav.link === correspondingNavigation.link)!).link).toLowerCase();
     } else {
-        return (currentRoute.links[0].link).toLowerCase();
+        return getLinkFromTypedLink(currentRoute.links[0].link).toLowerCase();
     }
 }
 

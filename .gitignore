@@ -22,3 +22,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Assistance
+CLAUDE.md
+GEMINI.md
+.claude
+docs/*
+*.txt

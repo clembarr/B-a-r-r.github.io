@@ -1,7 +1,7 @@
 import { projects } from "../../assets/contents";
 import styles from '../../style';
 import DOMPurify from 'dompurify';
-import { adjustFontSize, getActiveBreakpoint, isOverflowing } from '../../utils';
+import { adjustFontSize, getActiveBreakpoint, isOverflowing } from '../../utils/utils';
 import { useContext, useCallback, useEffect, useRef, useState } from 'react';
 import { LangContext } from '../language';
 import { coreImages, menuIcons } from '../../assets';
@@ -10,6 +10,8 @@ import { placeholderMessages } from '../../assets/constants';
 import RetexHeader from './RetexHeader';
 import RetexGalleryViewer from './RetexGalleryViewer';
 import { ThemeContext } from "../theme/ThemeEngine";
+import { ProjectMedia, MediaType } from "../../assets/dataTypes";
+import { translate } from "../../utils/assetsUtils";
 
 const RetexViewer = () => {
     const { currentLang } = useContext(LangContext);
@@ -36,26 +38,13 @@ const RetexViewer = () => {
         }
 
         if (notionsContainer.current) {
-            if (isOverflowing(notionsContainer.current)) {adjustFontSize(notionsContainer.current, "min");}
+            if (isOverflowing(notionsContainer.current)) {adjustFontSize(notionsContainer.current, "max");}
             else {adjustFontSize(notionsContainer.current, "max");}
         }
 
-        // if (notionsList.current) {
-        //     const listItems: HTMLCollectionOf<HTMLElement> = notionsList.current.children as HTMLCollectionOf<HTMLElement>;
-
-        //     if (listItems.length > 0 && isOverflowing(notionsList.current)) {
-        //         const lastItem = listItems[listItems.length - 1] as HTMLElement;
-        //         lastItem.style.display = "none";
-
-        //         for (let i = listItems.length - 2; i >= 0; i--) {
-        //             if (isOverflowing(notionsList.current)) {adjustFontSize(notionsList.current, "min");}
-        //         }
-        //     }
-        // }
-
         if (specsContainer.current && notionsContainer.current) {
-            if (getComputedStyle(specsContainer.current).fontSize <
-                getComputedStyle(notionsContainer.current).fontSize
+            if (getComputedStyle(specsContainer.current).fontSize 
+                < getComputedStyle(notionsContainer.current).fontSize
             ) {
                 notionsContainer.current.style.fontSize = getComputedStyle(specsContainer.current).fontSize;
             }
@@ -126,14 +115,80 @@ const RetexViewer = () => {
     }, [currentLang, displayedRetexTitle, toggleGallery]);
 
     const relatedProject = projects.find((project) => {
-        return (project.title[currentLang] === displayedRetexTitle
-        || project.title[0] === displayedRetexTitle);
+        return (translate(project.title, currentLang) === displayedRetexTitle
+        || translate(project.title, "0") === displayedRetexTitle);
     });
     if (!displayedRetexTitle) return;
     if (!relatedProject) {console.warn(`No project found for '${displayedRetexTitle}'.`); return;}
 
     /** Notions list capped by maxNotions to avoid overflow without DOM mutation. */
-    const displayedNotions = relatedProject.notions[currentLang].slice(0, maxNotions);
+    const displayedNotions = (relatedProject.content.notions[currentLang] || relatedProject.content.notions["0"] || []).slice(0, maxNotions);
+
+    /**
+     * Normalizes media input (string or ProjectMedia) into a ProjectMedia object.
+     * 
+     * @function normalizeMedia
+     * @param media - The media to normalize (image URL or media object)
+     * @returns A ProjectMedia object
+     */
+    const normalizeMedia = (media: string | ProjectMedia): ProjectMedia => {
+        if (typeof media === 'string') {
+            return {
+                url: media,
+                type: MediaType.IMAGE,
+                alt: "Project illustration"
+            };
+        }
+        return media;
+    };
+
+    const projectMedia = relatedProject.content.images ? relatedProject.content.images.map((media) => normalizeMedia(media)) : [];
+
+    /**
+     * Renders a media preview for the retex (supporting both images and videos).
+     * 
+     * @function renderPreviewMedia
+     * @param media - The ProjectMedia object to render
+     * @param index - The index of the media in the list (used for keys)
+     * @param isBlurred - Whether to apply a blur effect to the media (defaults to true)
+     * @param play - Whether to play the media (for videos) (defaults to false)
+     * @returns A React element (img or video)
+     */
+    const renderPreviewMedia = (
+        media: ProjectMedia, 
+        index: number, 
+        isBlurred: boolean =true, 
+        play: boolean =false
+    ) => {
+        const className = `
+            ${styles.sizeFull}
+            object-cover
+            object-center
+            ${isBlurred ? 'blur-[2px]' : ''}
+        `;
+
+        if (media.type === MediaType.VIDEO) {
+            return (
+                <video key={`retex-media-${index}`}
+                    src={media.url}
+                    poster={media.poster}
+                    autoPlay={play}
+                    muted={true}
+                    loop={play}
+                    playsInline={play}
+                    className={className}
+                />
+            );
+        }
+
+        return (
+            <img key={`retex-media-${index}`}
+                src={media.url}
+                alt={media.alt || `retex image ${index + 1}`}
+                className={className}
+            />
+        );
+    };
 
     return (
         <div id={`retex-${displayedRetexTitle}`}
@@ -169,8 +224,8 @@ const RetexViewer = () => {
                     space-y-0
                 `}
             >
-                {toggleGallery && relatedProject.img && relatedProject.img.length > 0
-                ? <RetexGalleryViewer images={relatedProject.img} untoggler={() => setToggleGallery(false)}/>
+                {toggleGallery && relatedProject.content.images && relatedProject.content.images.length > 0
+                ? <RetexGalleryViewer images={relatedProject.content.images} untoggler={() => setToggleGallery(false)}/>
                 : <>
                     <button
                         type="button"
@@ -178,16 +233,16 @@ const RetexViewer = () => {
                         onClick={() => setDisplayedRetex(undefined)}
                         className={`
                             absolute
-                            top-[2%]
-                            right-[1%]
-                            z-23
+                            top-2
+                            -right-6
                             ${isMobile ? "hidden" : "flex"}
                             items-center
                             justify-center
-                            w-8 h-8
+                            w-30
                             rounded-full
                             cursor-pointer
                             ${styles.defaultTransition}
+                            z-50
                         `}
                     >
                         <img src={menuIcons.close_menu_icon.content[currentTheme]}
@@ -212,7 +267,7 @@ const RetexViewer = () => {
                                 text-wrap
                                 ${isMobile ? "text-xs" : ""}
                             `}
-                            dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(relatedProject.specs[currentLang])}}
+                            dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(translate(relatedProject.content.specs, currentLang))}}
                         />
                     </span>
 
@@ -250,7 +305,7 @@ const RetexViewer = () => {
                                     ${isMobile ? "text-2xs" : ""}
                                 `}
                             >
-                                {displayedNotions.map((notion, index) => (
+                                {displayedNotions.map((notion: string, index: number) => (
                                     <li key={`notion-${index}`}
                                         dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(notion)}}
                                     />
@@ -275,10 +330,10 @@ const RetexViewer = () => {
                                 className=
                                 {`
                                     ${styles.sizeFull}
-                                    grid
-                                    grid-cols-2
-                                    grid-rows-2
-                                    grid-flow-dense
+                                    ${projectMedia.length !== 1 ? 
+                                        "grid grid-cols-2 grid-rows-2 grid-flow-dense"
+                                        : ""
+                                    }
                                     relative
                                     gap-[2%]
                                     ${styles.flexCol}
@@ -286,23 +341,13 @@ const RetexViewer = () => {
                                     overflow-hidden
                                 `}
                             >
-                                {relatedProject.img && relatedProject.img.length > 1 && relatedProject.img.map((img, index) => {
-                                    if (index < 4) return (
-                                        <img key={`retex-img-${index}`}
-                                            src={img}
-                                            alt={`retex image ${index + 1}`}
-                                            className=
-                                            {`
-                                                ${styles.sizeFull}
-                                                object-cover
-                                                object-center
-                                                blur-[2px]
-                                            `}
-                                        />
-                                    )
+                                {projectMedia.length > 1 && projectMedia.map((media, index) => {
+                                    if (index < 4) return renderPreviewMedia(media, index);
+                                    return null;
                                 })}
-                                {relatedProject.img && relatedProject.img.length > 1 && relatedProject.img.length < 4
-                                    ? Array.from({ length: 4 - relatedProject.img.length }, (_, i) => (
+
+                                {projectMedia.length > 1 && projectMedia.length < 4
+                                    ? Array.from({ length: 4 - projectMedia.length }, (_, i) => (
                                         <img key={`placeholder-img-${i}`}
                                             src={coreImages.placeholder_retex_image}
                                             alt={`placeholder image ${i+1}`}
@@ -315,36 +360,40 @@ const RetexViewer = () => {
                                             `}
                                         />
                                     ))
-                                    : null}
+                                : null}
 
-                                <button id='retex-gallery-button'
-                                    ref={galleryButton}
-                                    className=
-                                    {`
-                                        absolute
-                                        ${styles.sizeFit}
-                                        ${styles.flexRow}
-                                        ${styles.contentCenter}
-                                        z-50
-                                        bg-(--color-secondary)
-                                        text-(--color-tertiary)
-                                        text-xs
-                                        enabled:hover:scale-105
-                                        font-semibold
-                                        enabled:hover:text-(--color-quinary)
-                                        disabled:text-wrap
-                                        transition-all
-                                        duration-300
-                                        ease-in-out
-                                        rounded-lg
-                                        shadow-lg
-                                    `}
-                                    onClick={() => setToggleGallery(true)}
-                                    disabled={relatedProject.img && relatedProject.img.length <= 1}
-                                > {relatedProject.img && relatedProject.img.length > 1 ?
-                                    placeholderMessages.find((message) => message.context === "projectGalleryButton")!.content[currentLang]
-                                    : placeholderMessages.find((message) => message.context === "projectGalleryButtonEmpty")!.content[currentLang]
-                                } </button>
+                                {projectMedia.length !== 1 ?
+                                    <button id='retex-gallery-button'
+                                        ref={galleryButton}
+                                        className=
+                                        {`
+                                            absolute
+                                            ${styles.sizeFit}
+                                            ${styles.flexRow}
+                                            ${styles.contentCenter}
+                                            z-50
+                                            bg-(--color-secondary)
+                                            text-(--color-tertiary)
+                                            text-xs
+                                            enabled:hover:scale-105
+                                            font-semibold
+                                            enabled:hover:text-(--color-quinary)
+                                            disabled:text-wrap
+                                            transition-all
+                                            duration-300
+                                            ease-in-out
+                                            rounded-lg
+                                            shadow-lg
+                                        `}
+                                        onClick={() => setToggleGallery(true)}
+                                        disabled={projectMedia.length <= 1}
+                                    > {projectMedia.length > 1 ?
+                                        translate(placeholderMessages.find((message) => message.context === "projectGalleryButton")?.content, currentLang)
+                                        : translate(placeholderMessages.find((message) => message.context === "projectGalleryButtonEmpty")?.content, currentLang)
+                                    } </button>
+                                : 
+                                    renderPreviewMedia(projectMedia[0], 0, false, true)
+                                }
                             </span>
                         </div>
                     </div>
@@ -368,8 +417,8 @@ const RetexViewer = () => {
                         text-xs
                     `}
                 >
-                    {relatedProject.additionalRessources ?
-                        relatedProject.additionalRessources.map((resource, index) => (
+                    {relatedProject.content.additionalRessources ?
+                        relatedProject.content.additionalRessources.map((resource, index) => (
                             <li key={`retex-resource-${index}`}
                                 className=
                                 {`
@@ -385,8 +434,8 @@ const RetexViewer = () => {
                             >
                                 <a target='_blank'
                                     rel="noopener noreferrer"
-                                    href={resource.link}
-                                > → {resource.content[currentLang]} </a>
+                                    href={resource.link as any}
+                                > → {translate(resource.content, currentLang)} </a>
                             </li>
                         ))
                     : null}

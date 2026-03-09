@@ -2,7 +2,7 @@ import { useContext, useMemo } from "react";
 import { SearchContext } from "../search/SearchEngine";
 import { LangContext } from "../language";
 import { BlogPost, BlogCategory } from "../../assets/dataTypes";
-import { UNIVERSAL_LANG } from "../../assets/i18n";
+import { UNIVERSAL_LANG } from "../../utils/assetsUtils";
 import { BlogCard } from "../blog";
 import { blogSortingOptions, noDataMessages, placeholderMessages } from "../../assets/constants";
 import { ScrollReveal } from "../animations";

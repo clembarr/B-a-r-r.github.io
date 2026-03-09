@@ -3,7 +3,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import styles from "../../style";
 import { menuIcons } from "../../assets";
 import { ThemeContext } from "../theme/ThemeEngine";
-import { getActiveBreakpoint } from "../../utils";
+import { getActiveBreakpoint } from "../../utils/utils";
 import { galleryControls } from "../../assets/constants";
 import { GalleryAction } from "../../assets/dataTypes";
 import { motion } from "framer-motion";

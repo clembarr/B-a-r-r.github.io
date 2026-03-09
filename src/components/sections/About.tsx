@@ -6,11 +6,12 @@ import { useCallback, useContext, useEffect, useMemo, useRef } from "react"
 import { Link } from "react-router"
 import { LangContext } from "../language"
 import { ThemeContext } from "../theme/ThemeEngine"
-import { adjustFontSize, getActiveBreakpoint, isOverflowing } from "../../utils"
+import { adjustFontSize, getActiveBreakpoint, getLinkFromTypedLink, isOverflowing } from "../../utils/utils"
 import { aboutLinks } from "../../assets/constants"
 import AboutWidget from "../widgets/AboutWidget"
+import GraphWidget from "../widgets/GraphWidget"
 import { LanguageLevel } from "../../assets/dataTypes"
-import { MultilingualContent, MultilingualContentArray } from "../../assets/i18n"
+import { MultilingualContent, MultilingualContentArray } from "../../utils/assetsUtils"
 
 const About = () => {
   const { currentLang } = useContext(LangContext);
@@ -71,47 +72,13 @@ const About = () => {
     if (!widget) return null;
 
     const content: string[] = (widget.content as MultilingualContentArray)[currentLang] as string[];
-    const contentList = content.map((hobby) => {
-        return (
-          <li key={hobby}
-            className={`
-              ${styles.contentCenter}
-            `}
-          >
-            <span className={`
-                ${styles.contentCenter}
-                font-primary-semibold
-                w-full max-w-25
-                ${styles.tag}
-                ${currentTheme == 'dark'
-                  ? 'bg-(--color-tertiary)/10 text-(--color-tertiary) border border-(--color-tertiary)/30 hover:bg-(--color-tertiary)/20'
-                  : 'bg-(--color-tertiary)/10 text-(--color-tertiary) border border-(--color-tertiary)/20 hover:bg-(--color-tertiary)/15'
-                }
-              `}
-              dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(hobby)}}
-            />
-          </li>
-        )
-    })
     
     return (
-      <AboutWidget
+      <GraphWidget
         id={widget.id}
         title={widget.title[currentLang]}
-        content={(
-          <ul id='hobbies-list'
-            className={`
-              font-primary-regular
-              2xl:text-2xs
-              tracking-wide
-              space-y-4
-              grid grid-cols-2
-              gap-x-4
-            `}
-          > {contentList} </ul>
-        )}
+        tags={content}
         titleAdditionnalStyle="text-lg font-bold mb-4"
-        contentStyle={``}
       />
     );
   }
@@ -203,13 +170,13 @@ const About = () => {
         >
           {aboutLinks.map((ressource) => (
             ressource.context == "0" ?
-              <Link key={ressource.link}
-                to={ressource.link}
+              <Link key={getLinkFromTypedLink(ressource.link, currentLang)}
+                to={getLinkFromTypedLink(ressource.link, currentLang)}
                 className={styles.animatedLink}
               > {ressource.content[currentLang]} </Link>
             :
-              <a key={ressource.link}
-                href={ressource.link}
+              <a key={getLinkFromTypedLink(ressource.link, currentLang)}
+                href={getLinkFromTypedLink(ressource.link, currentLang)}
                 className={styles.animatedLink}
               > {ressource.content[currentLang]} </a>
           ))}
@@ -269,69 +236,36 @@ const About = () => {
 
         <div id='about-widgets-container'
           className={`
-            ${styles.sizeFull}
+            w-full
             ${styles.flexCol}
             ${styles.contentStartAll}
-            space-y-8
+            space-y-4
             mt-8
           `}
         >
           <div id='first-row'
             className={`
-              ${styles.sizeFull}
-              ${styles.flexRow}
-              ${styles.contentStartX}
-              space-x-6
-              max-w-4/5
+              w-full
+              grid grid-cols-2
+              gap-4
             `}
           >
-            <div id="widget-1"
-              className={`
-                ${styles.sizeFull}
-                max-w-1/2
-                max-h-100
-              `}
-            > {currentlyWidget} </div>
-
-            <div id="widget-2"
-              className={`
-                ${styles.sizeFull}
-                max-w-1/2
-                max-h-100
-              `}
-            > {futureWidget} </div>
+            <div id="widget-1" className="h-full"> {currentlyWidget} </div>
+            <div id="widget-2" className="h-full"> {futureWidget} </div>
           </div>
 
           <div id='second-row'
             className={`
-              ${styles.sizeFull}
-              ${styles.flexRow}
-              ${styles.contentStartX}
-              space-x-8
-              max-w-4/5
+              w-full
+              grid grid-cols-[1.2fr_1fr_1fr]
+              gap-4
+              shadow-lg
+              pb-2
             `}
           >
-            <div id="widget-3"
-              className={`
-                w-full
-                h-fit
-                max-w-1/2
-              `}
-            > {languagesWidget} </div>
-
-            <div id="widget-4"
-              className={`
-                ${styles.sizeFull}
-                max-w-1/3
-              `}
-            > {interestsWidget} </div>
-
-            <div id="widget-5"
-              className={`
-                ${styles.sizeFull}
-                max-w-1/3
-              `}
-            > {hobbiesWidget} </div>
+            <div id="widget-3" className="h-full"> {languagesWidget} </div>
+            <div id="widget-4" className="h-full"> {interestsWidget} </div>
+            <div id="widget-5" className="h-full"> {hobbiesWidget} </div>
           </div>
         </div>
       </div>

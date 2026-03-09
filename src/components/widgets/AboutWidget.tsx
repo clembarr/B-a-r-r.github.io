@@ -16,6 +16,9 @@ const AboutWidget = ({ id, title, content, titleAdditionnalStyle, contentStyle }
             className={`
                 ${styles.widgetCard}
                 px-6 py-4
+                h-full
+                ${styles.flexCol}
+                shadow-md
             `}
         >
             <h3 id={`about-widget-${id}-title`}
@@ -28,6 +31,8 @@ const AboutWidget = ({ id, title, content, titleAdditionnalStyle, contentStyle }
             <div id={`about-widget-${id}-content`}
                 className={`
                     ${contentStyle}
+                    flex-1
+                    relative
                 `}
             > {content} </div>
         </div>

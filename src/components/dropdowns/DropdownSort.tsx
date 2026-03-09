@@ -5,7 +5,8 @@ import { SearchContext } from '../search';
 import { placeholderMessages } from '../../assets/constants';
 import { LangContext } from '../language';
 import { FilterOption } from '../../assets/dataTypes';
-import { getActiveBreakpoint } from '../../utils';
+import { getActiveBreakpoint } from '../../utils/utils';
+import { UNIVERSAL_LANG } from '../../utils/assetsUtils';
 
 type DropdownSortProps = {
     alreadyDisplayedItems?: string[];
@@ -26,16 +27,13 @@ const DropdownSort = ({alreadyDisplayedItems, options}: DropdownSortProps) => {
     useEffect(() => {
         if (selectedItem !== undefined) {
             setSearchInput("");
-            updateSearch([
-                selectedItem.abreviation ? (selectedItem.abreviation.content[currentLang] || selectedItem.abreviation.content[0]).toUpperCase()
-                : (selectedItem.content[currentLang] || selectedItem.content[0]).toUpperCase()
-            ])
+            updateSearch([selectedItem.context.valueOf().toUpperCase()])
         }
     }, [selectedItem, dropdownPlaceholder, currentLang])
 
     useEffect(() => {
-        if (!(selectedItem?.abreviation && toMatch.includes((selectedItem.abreviation.content[currentLang] || selectedItem.abreviation.content[0]).toUpperCase()))
-            && !(selectedItem?.content && toMatch.includes((selectedItem.content[currentLang] || selectedItem.content[0]).toUpperCase()))
+        if (!(selectedItem?.abreviation && toMatch.includes(selectedItem.context.valueOf().toUpperCase()))
+            && !(selectedItem?.content && toMatch.includes(selectedItem.context.valueOf().toUpperCase()))
         ) {
             setSelectedItem(undefined);
             setPlaceholder(dropdownPlaceholder)
@@ -57,8 +55,8 @@ const DropdownSort = ({alreadyDisplayedItems, options}: DropdownSortProps) => {
                     onClick={() => {
                         setSelectedItem(option); 
                         setPlaceholder(
-                            option.abreviation ? (option.abreviation.content[currentLang] || option.abreviation.content[0]) 
-                            : (option.content[currentLang] || option.content[0])
+                            option.abreviation ? (option.abreviation.content[currentLang] || option.abreviation.content[UNIVERSAL_LANG]) 
+                            : (option.content[currentLang] || option.content[UNIVERSAL_LANG])
                         );
                     }}
                 > { option.content[currentLang] } </li>

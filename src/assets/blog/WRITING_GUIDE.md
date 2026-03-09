@@ -9,7 +9,7 @@ Le contenu est du **HTML inline** dans les strings `content`, stylisé automatiq
 
 ```ts
 import { BlogPost, BlogCategory } from '../dataTypes';
-import { UNIVERSAL_LANG } from '../i18n';
+import { UNIVERSAL_LANG } from '../../utils/assetsUtils';
 
 export const monArticle: BlogPost = {
   slug: "mon-article",                        // URL : /blog/mon-article

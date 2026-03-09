@@ -1,6 +1,6 @@
 import styles from "../style"
 import { copyrigthText } from "../assets/constants"
-import { getActiveBreakpoint, getCurrentNavigation, shuffle } from "../utils"
+import { getActiveBreakpoint, getCurrentNavigation, getLinkFromTypedLink, shuffle } from "../utils/utils"
 import { useContext, useEffect, useState } from "react"
 import { footerColumns } from "../assets/contents"
 import DOMPurify from "dompurify"
@@ -51,16 +51,16 @@ const Footer = () => {
         return currentPattern.links.map((navLink, index) => (
           <a key={`nav-link-${index}`}
             id={`nav-link-${navLink.content[currentLang]}`}
-            href={navLink.link}
+            href={getLinkFromTypedLink(navLink.link, currentLang)}
             className={`
               text-sm
               transition-all duration-200
-              ${(navLink.link).toLowerCase() === currentNavigation
+              ${(getLinkFromTypedLink(navLink.link, currentLang).toLowerCase()) === currentNavigation
                 ? `text-(--color-tertiary) ${isDark ? 'drop-shadow-[0_0_4px_rgba(124,255,196,0.4)]' : ''}`
                 : 'text-(--color-muted) hover:text-(--color-tertiary)'
               }
             `}
-            onClick={() => setCurrentNavigation((navLink.link).toLowerCase())}
+            onClick={() => setCurrentNavigation(getLinkFromTypedLink(navLink.link, currentLang).toLowerCase())}
           > {navLink.content[currentLang] || navLink.content[0]} </a>
         ));
       }
@@ -71,10 +71,11 @@ const Footer = () => {
           <a key={`credit-${index}`}
             id={`credit-${credit.content[currentLang]}`}
             href={
-              credit.link ? credit.link
+              credit.link ? getLinkFromTypedLink(credit.link, currentLang)
               : (Array.isArray(credit.contentRef) ?
-                credit.contentRef[0].content[currentTheme]
-                : credit.contentRef.content[currentTheme])
+                getLinkFromTypedLink(credit.contentRef[0].content[currentTheme], currentLang)
+                : getLinkFromTypedLink(credit.contentRef.content[currentTheme], currentLang)
+              )
             }
             className={`
               text-sm
@@ -97,7 +98,7 @@ const Footer = () => {
         return shuffle(shuffle(links)).slice(0, 4).map((link, index) => (
           <a key={`see-also-${index}`}
             id={`see-also-${index}`}
-            href={link.link}
+            href={getLinkFromTypedLink(link.link, currentLang)}
             className={`
               text-sm
               text-(--color-muted)
@@ -195,7 +196,7 @@ const Footer = () => {
         `}
       >
         <a id="copyrigth"
-          href={copyrigthText.link}
+          href={getLinkFromTypedLink(copyrigthText.link, currentLang)}
           className=
           {`
             ${getActiveBreakpoint('number') as number <= 2 ? "text-left" : "text-right"}

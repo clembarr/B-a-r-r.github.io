@@ -1,168 +1,114 @@
-// WIP - Commented out to fix build errors
-// import { useContext, useEffect, useRef, useState } from "react"
-// import { skills } from "../../assets/contents"
-// import { AvailableSkillCategories, SkillCategorie} from "../../assets/dataTypes"
-// import styles from "../../style"
-// import { skillCategories } from "../../assets/constants"
-// import { ThemeContext } from "../theme/ThemeEngine"
+import { useContext, useMemo } from "react";
+import { skills } from "../../assets/contents";
+import styles from "../../style";
+import { ThemeContext } from "../theme/ThemeEngine";
+import SkillGalaxy from "../showcase/SkillGalaxy";
+import { LangContext } from "../language";
+import { translate } from "../../utils/assetsUtils";
 
-// type GraphData = {
-//   nodes: {id: string, name: string, img: string, val: number, group: SkillCategorie}[];
-//   links: {source: string, target: string}[];
-// }
+const CLUSTER_CENTERS: Record<string, { x: number; y: number }> = {
+  LANGUAGE: { x: 0.25, y: 0.25 },
+  TOOL: { x: 0.75, y: 0.25 },
+  LIBRARY: { x: 0.5, y: 0.75 },
+};
 
 const Skills = () => {
-//   const { currentTheme } = useContext(ThemeContext)
-//   const [selectedCategory, setSelectedCategory] = useState(AvailableSkillCategories.LANGUAGE)
-//   const [graphData, setGraphData] = useState<GraphData>()
-//   const graph = useRef<ForceGraphMethods$1<{ id: string; name: string; img: string; val: number; group: SkillCategorie; }, { source: string; target: string }> | undefined>(undefined)
-//   const distance = 500
-  
-//   useEffect(() => {
-//     const initGraphData: GraphData = {nodes: [], links: []}
+  const { currentTheme } = useContext(ThemeContext);
+  const { currentLang } = useContext(LangContext);
 
-//     skills//.filter((skill) => skill.category.context === selectedCategory)
-//     .sort((a) => a.framework ? -1 : 1)
-//     .sort((a,b) => a.framework === b.framework ? -1 : 1)
-//     .map((skill, _index, all) => {
-//       initGraphData.nodes.push({
-//         id: skill.label,
-//         name: skill.label,
-//         img: skill.icon.content[currentTheme],
-//         val: skill.weight ?? 1,
-//         group: skill.category!
-//       })
+  const { nodes, links } = useMemo(() => {
+    const galaxyNodes: any[] = [];
+    const galaxyLinks: any[] = [];
 
-//       const verifiedTarget = (
-//         initGraphData.links.find((l) => l.target === skill.label) ? null 
-//         : skill.framework ? all.find((s) => s.label === skill.framework)
-//         : all.find((s) => 
-//           s.subcategory === skill.subcategory 
-//           && !s.framework
-//           && s.label !== skill.label
-//         ) ?? null
-//       )
-//       if (verifiedTarget !== null) {
-//         initGraphData.links.push({
-//           source: skill.label,
-//           target: verifiedTarget!.label
-//         })
-//       }
+    // Group skills by category to organize them in the galaxy
+    skills.forEach((skill) => {
+      // Determine base position according to category
+      const center = CLUSTER_CENTERS[skill.category.context] || { x: 0.5, y: 0.5 };
+      
+      // Add some random dispersion around the center
+      const offsetX = (Math.random() - 0.5) * 0.4;
+      const offsetY = (Math.random() - 0.5) * 0.4;
 
-//       setGraphData(initGraphData)
-//     })
-//   }, [selectedCategory])
+      galaxyNodes.push({
+        id: skill.label,
+        label: skill.label,
+        x: Math.max(0.1, Math.min(0.9, center.x + offsetX)), // Keep within bounds
+        y: Math.max(0.1, Math.min(0.9, center.y + offsetY)),
+        size: (skill.weight ?? 5) * 1.5, // Scale weight for better visual size
+        cluster: translate(skill.category.content, currentLang)?.toUpperCase() || skill.category.context,
+        color: currentTheme === 'dark' ? '#71cbb3' : '#3D3E3C', // Fallback color, mostly overridden by icons
+        icon: skill.icon.content[currentTheme]
+      });
 
-//   useEffect(() => {
-//     graph.current?.cameraPosition({ z: distance });
+      // Create links for frameworks
+      if (skill.framework) {
+        // Ensure the framework exists in our skills list to avoid broken links
+        const targetExists = skills.some(s => s.label === skill.framework);
+        if (targetExists) {
+          galaxyLinks.push({
+            source: skill.label,
+            target: skill.framework,
+            type: 'framework'
+          });
+        }
+      }
+    });
 
-//     let angle = 0;
-//     setInterval(() => {
-//       graph.current?.cameraPosition({
-//         x: distance * Math.sin(angle),
-//         z: distance * Math.cos(angle)
-//       });
-//       angle += Math.PI / 300;
-//     }, 10);
-//   }, []);
+    // Create additional links for related subcategories within the same category
+    // This makes the constellation look more connected
+    skills.forEach((skill, i) => {
+      if (!skill.subcategory) return;
+      
+      // Find another skill with the same subcategory to connect to
+      const relatedSkill = skills.find((s, j) => 
+        j > i && // Avoid duplicate links and self-links
+        s.subcategory?.context === skill.subcategory?.context &&
+        !s.framework && !skill.framework // Don'translate over-connect framework items
+      );
 
+      if (relatedSkill) {
+        galaxyLinks.push({
+          source: skill.label,
+          target: relatedSkill.label,
+          type: 'career'
+        });
+      }
+    });
 
-//   return (
-//     <section id="skills"
-//       className=
-//       {`
-//         ${styles.sizeFull}
-//         ${styles.flexCol}
-//         ${styles.contentCenter}
-//       `}
-//     >
-//       <div id="section-controls"
-//         className=
-//         {`
-//           ${styles.flexRow}
-//           w-full
-//           h-fit        
-//         `}
-//       >
-//         {skillCategories.map((categorie) => (
-//           <button key={`${categorie}`}
-//             className=
-//             {`
-//               ${selectedCategory === categorie.context ? "text-(--color-tertiary)" : ""}
-//               hover:text-(--color-tertiary)
-//             `}
-//             onClick={() => setSelectedCategory(categorie.context)}
-//           > {categorie.content['fr']} </button>
-          
-//         ))}
-//         {selectedCategory}
-//       </div>
+    return { nodes: galaxyNodes, links: galaxyLinks };
+  }, [currentTheme, currentLang]);
 
-//       <div id="graph-container"
-//         className=
-//         {`
-//           ${styles.sizeFull}
-//           ${styles.flexCol}
-//           ${styles.contentCenter}
-//           border-red-500
-//           border-2
-//         `}
-//       >
-//         <ForceGraph2D //ref={graph}
-//           graphData={graphData}
-//           backgroundColor={
-//             getComputedStyle(document.documentElement)
-//             .getPropertyValue("--color-primary")
-//           }
-//           width={document.querySelector("#graph-container")?.clientWidth ?? 0}
-//           height={ document.querySelector("#graph-container")?.clientHeight ?? 0}
-//           enableNodeDrag={false}
-//           enableZoomInteraction={false}
-//           enablePointerInteraction={true}
-          
-//           //showNavInfo={false}
-//           //enableNavigationControls={true}
-          
-//           nodeCanvasObject={(node) => {
-//             const imgTexture = new TextureLoader().load(node.img);
-//             imgTexture.colorSpace = SRGBColorSpace;
-//             const material = new SpriteMaterial({ map: imgTexture });
-//             const sprite = new Sprite(material);
-//             sprite.scale.set(24, 24, 1);
-//             return sprite;
-//           }}
-//           // nodeThreeObject={({ img }) => {
-//           //     const imgTexture = new TextureLoader().load(img);
-//           //     imgTexture.colorSpace = SRGBColorSpace;
-//           //     const material = new SpriteMaterial({ map: imgTexture });
-//           //     const sprite = new Sprite(material);
-//           //     sprite.scale.set(24, 24, 1);
-//           //     return sprite;
-//           // }}
-//           nodeLabel={(node) => `${node.name}`}
-//           nodeVal={(node) => node.val}
-//           nodeRelSize={5}
-//           //nodeResolution={10}
+  return (
+    <section id="skills"
+      className=
+      {`
+        ${styles.sizeFull}
+        ${styles.flexCol}
+        ${styles.contentCenter}
+      `}
+    >
+      <div id="galaxy-container"
+        className=
+        {`
+          w-full
+          min-h-[500px]
+          md:min-h-[600px]
+          relative
+          ${styles.contentCenter}
+          bg-(--color-tertiary)/5
+          rounded-2xl
+          border border-(--color-tertiary)/10
+          overflow-hidden
+        `}
+      >
+        <SkillGalaxy 
+          nodes={nodes} 
+          links={links} 
+          className="w-full h-full"
+        />
+      </div>
+    </section>
+  );
+};
 
-//           linkColor={() =>
-//             getComputedStyle(document.documentElement)
-//             .getPropertyValue("--color-tertiary")
-//           }
-//           linkVisibility={true}
-//           linkLabel={"bonjour"}
-//           linkWidth={1}
-//           //linkOpacity={0.5}
-//           //linkResolution={10}
-
-//           linkDirectionalParticles={1}
-//           linkDirectionalParticleSpeed={0.001}
-//           linkDirectionalParticleWidth={0.8}
-          
-//           onEngineStop={() => graph.current?.zoomToFit(400, 400)}
-//         />
-//       </div>
-//     </section>
-//   )  
-}
-
-export default Skills
+export default Skills;

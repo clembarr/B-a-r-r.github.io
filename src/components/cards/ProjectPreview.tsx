@@ -1,16 +1,87 @@
 import { useContext, useRef } from 'react';
 import { coreImages } from '../../assets';
-import {Retex} from "../../assets/dataTypes";
+import {Retex, ProjectMedia, MediaType} from "../../assets/dataTypes";
 import styles from '../../style';
 import { LangContext } from '../language';
 import Card from './Card';
-import { handleMouseLeave, handleMouseMove } from '../../utils';
+import { handleMouseLeave, handleMouseMove } from '../../utils/utils';
 import { RetexContext } from '../retex';
 
+/**
+ * @description Project card with a preview image or video.
+ * 
+ * @function ProjectPreview
+ * @param project - The project data
+ * @returns The project preview card component
+ */
 const ProjectPreview = (project: Retex) => {
     const { currentLang } = useContext(LangContext);
     const { setDisplayedRetex } = useContext(RetexContext);
     const cardRef = useRef<HTMLDivElement>(null);
+
+    /**
+     * Normalizes media input (string or ProjectMedia) into a ProjectMedia object.
+     * 
+     * @function normalizeMedia
+     * @param media - The media to normalize
+     * @returns A ProjectMedia object
+     */
+    const normalizeMedia = (media: string | ProjectMedia): ProjectMedia => {
+        if (typeof media === 'string') {
+            return {
+                url: media,
+                type: MediaType.IMAGE,
+                alt: "Project illustration"
+            };
+        }
+        return media;
+    };
+
+    const firstMedia = normalizeMedia(project.coverImage || coreImages.placeholder_retex_image);
+
+    /**
+     * Renders a preview of the media (image or video).
+     * 
+     * @function renderMedia
+     * @param media - The media object to render
+     * @returns A React element (img or video)
+     */
+    const renderMedia = (media: ProjectMedia) => {
+        const className = `
+            lg:h-50 h-full
+            w-full
+            aspect-video
+            object-cover
+            object-top
+        `;
+
+        if (media.type === MediaType.VIDEO) {
+            return (
+                <div className="relative w-full h-full">
+                    <video
+                        src={media.url}
+                        poster={media.poster}
+                        muted
+                        loop
+                        playsInline
+                        autoPlay
+                        className={className}
+                    />
+                    <div className="absolute top-2 right-2 bg-black/50 text-white text-[10px] px-1.5 py-0.5 rounded font-bold backdrop-blur-sm">
+                        VIDEO
+                    </div>
+                </div>
+            );
+        }
+
+        return (
+            <img id={`card-${project.title}-img`}
+                src={media.url}
+                alt={media.alt || "project image"}
+                className={className}
+            />
+        );
+    };
 
     return (
         <div ref={cardRef}
@@ -45,18 +116,7 @@ const ProjectPreview = (project: Retex) => {
                     mb-0
                 `}
             >
-                <img id={`card-${project.title}-img`}
-                    src={project.img && project.img.length > 0 ? project.img[0] : coreImages.placeholder_retex_image}
-                    alt="project image"
-                    className=
-                    {`
-                        lg:h-50 h-full
-                        w-full
-                        aspect-video
-                        object-cover
-                        object-top
-                    `}
-                />
+                {renderMedia(firstMedia)}
             </div>
             
             <Card title={project.title[currentLang] || project.title[0]} 

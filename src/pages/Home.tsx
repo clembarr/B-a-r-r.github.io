@@ -1,6 +1,6 @@
 import { lazy, Suspense } from 'react';
 import styles from "../style";
-import { Hero, About, Contact } from "../components/sections";
+import { Hero, About, Contact, Skills } from "../components/sections";
 import { ScrollReveal, PageTransition } from "../components/animations";
 import { SuspenseFallback } from "../components";
 import { MetaTags, StructuredData, personSchema, websiteSchema } from "../components/seo";
@@ -48,13 +48,6 @@ const Home = () => {
         > <About /> </div>
       </ScrollReveal>
 
-      {/* <div id="skills-container"
-        className=
-        {`
-          ${styles.sectionContainer}
-        `}
-      > <Skills /> </div> */}
-
       <ScrollReveal direction="up" delay={0.3}>
         <div id="projects-slider-container"
           className=
@@ -67,6 +60,15 @@ const Home = () => {
             <ProjectsSlider />
           </Suspense>
         </div>
+      </ScrollReveal>
+
+      <ScrollReveal direction="up" delay={0.35}>
+        <div id="skills-container"
+          className=
+          {`
+            ${styles.sectionContainer}
+          `}
+        > <Skills /> </div>
       </ScrollReveal>
 
       <ScrollReveal direction="up" delay={0.4}>

@@ -1,0 +1,54 @@
+export const PageTransitionsConstants = {
+  DURATION: 0.4,
+  REDUCED_MOTION_DURATION: 0.01,
+  INITIAL_OPACITY: "0",
+  INITIAL_Y: 20,
+  ANIMATE_OPACITY: 1,
+  ANIMATE_Y: "0",
+  EXIT_OPACITY: "0",
+  EXIT_Y: -20,
+  EASE: "0.25 0.1 0.25 1", //space separated values
+}
+
+export const ScrollRevealConstants = {
+  DURATION: 0.6,
+  REDUCED_MOTION_DURATION: 0.01,
+  INITIAL_POS: 50, //varies based on direction
+  INITIAL_OPACITY: 0,
+  ANIMATE_POS: 0,
+  ANIMATE_OPACITY: 1,
+  EASE: "0.25 0.1 0.25 1", //space separated values
+}
+
+export const ArticlesMotionConstants = {
+  MOTION_OPACITY: 0,
+  MOTION_Y: 20,
+  ANIMATE_OPACITY: 1,
+  ANIMATE_Y: 0,
+  REDUCED_MOTION_TRANSITION_DURATION: 0.01,
+  TRANSITION_DURATION: 0.5,
+  TRANSITION_EASE: "0.25 0.1 0.25 1"
+}
+
+export const TableOfContentObserverConstants = {
+  ROOT_MARGIN: "-80px 0px -80% 0px",
+  THRESHOLD: 1.0,
+  MOTION_OPACITY: 0,
+  MOTION_X: 20,
+  ANIMATE_OPACITY: 1,
+  ANIMATE_X: 0,
+  TRANSITION_DURATION: 0.4,
+  REDUCED_MOTION_TRANSITION_DURATION: 0.01,
+  TRANSITION_DELAY: 0.2,
+  TRANSITION_EASE: "0.25 0.1 0.25 1"
+}
+
+export const TableOfContentsItemConstants = {
+  MOTION_OPACITY: 0,
+  MOTION_X: 20,
+  ANIMATE_OPACITY: 1,
+  ANIMATE_X: 0,
+  TRANSITION_DURATION: 0.3,
+  REDUCED_MOTION_TRANSITION_DURATION: 0.01,
+  REDUCED_MOTION_TRANSITION_DELAY: 0
+}

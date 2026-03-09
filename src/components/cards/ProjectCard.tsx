@@ -4,7 +4,7 @@ import { Project } from "../../assets/dataTypes";
 import Card from "./Card";
 import { LangContext } from "../language";
 import { Link } from "react-router";
-import { handleMouseEnter, handleMouseLeave, handleMouseMove } from "../../utils";
+import { handleMouseEnter, handleMouseLeave, handleMouseMove } from "../../utils/utils";
 import { ThemeContext } from "../theme/ThemeEngine";
 
 type ProjectCardProps = {

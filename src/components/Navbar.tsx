@@ -3,7 +3,7 @@ import { navLinks } from "../assets/constants";
 import DropdownLang from "./dropdowns/DropdownLang";
 import SwitchButton from "./theme/SwitchButton";
 import styles from "../style";
-import { getActiveBreakpoint, getCurrentNavigation } from "../utils";
+import { getActiveBreakpoint, getCurrentNavigation, getLinkFromTypedLink } from "../utils/utils";
 import { Link } from "react-router";
 import { LangContext } from "./language";
 import { menuIcons } from "../assets";
@@ -104,7 +104,7 @@ const Navbar = () => {
           (nav) => nav.route.includes(window.location.pathname.split('/')[1])
         ) ?? navLinks.find((nav) => nav.route === '')!).links.map((nav, index) => {
           const thisNav = nav.content[currentLang] ? nav.content[currentLang] : nav.content[0];
-          const isActive = (nav.link).toLowerCase() === currentNavigation;
+          const isActive = getLinkFromTypedLink(nav.link, currentLang).toLowerCase() === currentNavigation;
           return (
             <li key={`navlink-${index}`}
               className=
@@ -126,13 +126,21 @@ const Navbar = () => {
             >
               {/** If the navigation link is an anchor on the page, it become an <a>. Else if it
                * is supposed to redirect on another page, it become a React <Link>. */
-              nav.link.includes('#') ?
-                <a href={nav.link}
-                  onClick={() => setCurrentNavigation((nav.link).toLowerCase())}
+              getLinkFromTypedLink(nav.link, currentLang).includes('#') ?
+                <a id={`page-navigation-link-${getLinkFromTypedLink(nav.link, currentLang)}`}
+                  href={getLinkFromTypedLink(nav.link, currentLang).toLowerCase()}
+                  onClick={() => setCurrentNavigation(getLinkFromTypedLink(nav.link, currentLang).toLowerCase())}
                 > {thisNav} </a>
-                :
-                <Link to={nav.link}
-                  onClick={() => setCurrentNavigation((nav.link).toLowerCase())}
+              : nav.context === "1" ?
+                <a id={`external-link-${getLinkFromTypedLink(nav.link, currentLang)}`}
+                  href={getLinkFromTypedLink(nav.link, currentLang)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                > {thisNav} </a>
+              :
+                <Link id={`page-link-${getLinkFromTypedLink(nav.link, currentLang)}`}
+                  to={getLinkFromTypedLink(nav.link, currentLang)}
+                  onClick={() => setCurrentNavigation(getLinkFromTypedLink(nav.link, currentLang).toLowerCase())}
                 > {thisNav} </Link>
               }
             </li>
@@ -248,7 +256,7 @@ const Navbar = () => {
               (nav) => nav.route.includes(window.location.pathname.split('/')[1])
             )?.links.map((nav, index) => {
               const thisNav = nav.content[currentLang] ? nav.content[currentLang] : nav.content[0];
-              const isActive = (nav.link).toLowerCase() === currentNavigation;
+              const isActive = getLinkFromTypedLink(nav.link, currentLang).toLowerCase() === currentNavigation;
               return (
                 <li key={`navlink-${index}`}
                   className=
@@ -270,13 +278,18 @@ const Navbar = () => {
                 >
                   {/** If the navigation link is an anchor on the page, it become an <a>. Else if it
                    * is supposed to redirect on another page, it become a React <Link>. */
-                  nav.link.includes('#') ?
-                    <a href={nav.link}
-                      onClick={() => setCurrentNavigation((nav.link).toLowerCase())}
+                  getLinkFromTypedLink(nav.link, currentLang).includes('#') ?
+                    <a href={getLinkFromTypedLink(nav.link, currentLang)}
+                      onClick={() => setCurrentNavigation(getLinkFromTypedLink(nav.link, currentLang).toLowerCase())}
                     > {thisNav} </a>
-                    :
-                    <Link to={nav.link}
-                      onClick={() => setCurrentNavigation((nav.link).toLowerCase())}
+                  : nav.context === "1" ?
+                    <a href={getLinkFromTypedLink(nav.link, currentLang)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    > {thisNav} </a>
+                  :
+                    <Link to={getLinkFromTypedLink(nav.link, currentLang)}
+                      onClick={() => setCurrentNavigation(getLinkFromTypedLink(nav.link, currentLang).toLowerCase())}
                     > {thisNav} </Link>
                   }
                 </li>

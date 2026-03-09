@@ -5,7 +5,7 @@ import { useContext, useEffect, useState } from "react"
 import DOMPurify from "dompurify"
 import { ThemeContext } from "../theme/ThemeEngine"
 import { LangContext } from "../language"
-import { getActiveBreakpoint } from "../../utils"
+import { getActiveBreakpoint } from "../../utils/utils"
 import HeroIllustration from "./HeroIllustration"
 
 const Hero = () => {

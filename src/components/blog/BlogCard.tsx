@@ -2,11 +2,11 @@ import { useContext, useRef } from 'react';
 import { Link } from 'react-router';
 import { motion } from 'framer-motion';
 import { BlogPost } from '../../assets/dataTypes';
-import { UNIVERSAL_LANG } from '../../assets/i18n';
+import { UNIVERSAL_LANG } from '../../utils/assetsUtils';
 import { LangContext } from '../language';
 import { ThemeContext } from '../theme/ThemeEngine';
 import { author, placeholderMessages } from '../../assets/constants';
-import { formatBlogDate, handleMouseEnter, handleMouseLeave, handleMouseMove } from '../../utils';
+import { formatBlogDate, handleMouseEnter, handleMouseLeave, handleMouseMove } from '../../utils/utils';
 import styles from '../../style';
 import Card from '../cards/Card';
 
@@ -92,7 +92,7 @@ const BlogCard = ({ post, index = 0 }: BlogCardProps) => {
           {post.coverImage && (
             <div className="w-full h-36 overflow-hidden">
               <img
-                src={post.coverImage}
+                src={post.coverImage as any}
                 alt={title}
                 className="w-full h-full object-cover"
                 loading="lazy"

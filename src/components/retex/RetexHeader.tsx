@@ -2,20 +2,13 @@ import { useContext } from "react"
 import styles from "../../style"
 import DOMPurify from "dompurify"
 import { LangContext } from "../language"
-import { Hyperlink, Skill } from "../../assets/dataTypes"
+import { Retex } from "../../assets/dataTypes"
 import { ThemeContext } from "../theme/ThemeEngine"
-import { getActiveBreakpoint } from "../../utils"
+import { getActiveBreakpoint } from "../../utils/utils"
 import { menuIcons } from "../../assets"
 import { RetexContext } from "./RetexDisplayEngine"
 
-type RetexHeaderProps = {
-    title: {[lang: string]: string},
-    date: Date,
-    tools: Skill[],
-    additionalRessources?: Hyperlink[]
-}
-
-const RetexHeader = (relatedProject: RetexHeaderProps) => {
+const RetexHeader = (relatedProject: Retex) => {
     const { currentLang } = useContext(LangContext);
     const { currentTheme } = useContext(ThemeContext);
     const { setDisplayedRetex } = useContext(RetexContext);
@@ -121,7 +114,7 @@ const RetexHeader = (relatedProject: RetexHeaderProps) => {
                         overflow-y-hidden
                     `}
                 >
-                    {relatedProject.tools.slice(0, 6).map((tool, index) => (
+                    {relatedProject.content.tools.slice(0, 6).map((tool, index) => (
                         <span key={`retex-skill-${index}`}
                             className=
                             {`
@@ -170,12 +163,12 @@ const RetexHeader = (relatedProject: RetexHeaderProps) => {
                         text-wrap
                         ml-[6%]
                         mt-[8%]
-                        text-[90%]
+                        2xl:text-base
                         space-y-[3%]
                     `}
                 >
-                    {relatedProject.additionalRessources ?
-                        relatedProject.additionalRessources.map((resource, index) => (
+                    {relatedProject.content.additionalRessources ?
+                        relatedProject.content.additionalRessources.map((resource, index) => (
                             <li key={`retex-resource-${index}`}
                                 className={`
                                     ${styles.sizeFull}
@@ -184,9 +177,9 @@ const RetexHeader = (relatedProject: RetexHeaderProps) => {
                             >
                                 <a target='_blank'
                                     rel="noopener noreferrer"
-                                    href={resource.link}
+                                    href={resource.link as any}
                                     className={`${styles.animatedLink} font-bold`}
-                                > → {resource.content[currentLang]} </a>
+                                > → {resource.content[currentLang] || resource.content[0]} </a>
                             </li>
                         ))
                     : null}

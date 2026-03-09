@@ -13,10 +13,10 @@ import 'prismjs/components/prism-json';
 import 'prismjs/components/prism-bash';
 import 'prismjs/components/prism-sql';
 import { BlogPost } from '../../assets/dataTypes';
-import { UNIVERSAL_LANG } from '../../assets/i18n';
+import { UNIVERSAL_LANG } from '../../utils/assetsUtils';
 import { ArticlesMotionConstants, author, placeholderMessages } from '../../assets/constants';
 import { LangContext } from '../language';
-import { formatBlogDate } from '../../utils';
+import { formatBlogDate } from '../../utils/utils';
 
 import TableOfContents from './TableOfContents';
 import styles from '../../style';
@@ -137,7 +137,7 @@ const ArticleLayout = ({ post, relatedPosts = [] }: ArticleLayoutProps) => {
 
       if (imageMatch) {
         const imgIndex = parseInt(imageMatch[1], 10);
-        const imgSrc = post.img?.[imgIndex];
+        const imgSrc = (post as any).img?.[imgIndex];
         if (!imgSrc) return null;
 
         /** Parse optional params: w=<CSS value> and positioning keyword */
@@ -155,7 +155,7 @@ const ArticleLayout = ({ post, relatedPosts = [] }: ArticleLayoutProps) => {
         const img = (
           <img id={`img-${imgIndex}`}
             key={i}
-            src={imgSrc}
+            src={imgSrc as any}
             alt={`${title}-illustration${imgIndex}`}
             className={`
               rounded-lg
@@ -237,7 +237,7 @@ const ArticleLayout = ({ post, relatedPosts = [] }: ArticleLayoutProps) => {
               opacity-80
             `}>
             <img id='cover-image'
-              src={post.coverImage}
+              src={post.coverImage as any}
               alt={title}
               className={`
                 w-full 
@@ -288,7 +288,7 @@ const ArticleLayout = ({ post, relatedPosts = [] }: ArticleLayoutProps) => {
               mt-6
             `}
           >
-            {tags.map((tag, i) => {
+            {tags.map((tag: string, i: number) => {
               if (i <= 3) {
                 return (
                   <span id={`tag-${i}`}

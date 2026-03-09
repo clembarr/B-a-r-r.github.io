@@ -1,10 +1,10 @@
 import { useParams, useNavigate } from 'react-router';
 import { ArticleLayout } from '../components/blog';
 import { PageTransition } from '../components/animations';
-import { UNIVERSAL_LANG } from '../assets/i18n';
+import { UNIVERSAL_LANG } from '../utils/assetsUtils';
 import { APP_URL, author } from '../assets/constants';
 import { blogPosts } from '../assets/blog';
-import { getRelatedPosts } from '../utils';
+import { getRelatedPosts } from '../utils/utils';
 import { StructuredData, MetaTags, generateBlogPostSchema } from '../components/seo';
 import styles from '../style';
 
@@ -53,7 +53,7 @@ const BlogPost = () => {
           description,
           datePublished: post.date.toISOString(),
           url: postUrl,
-          image: post.coverImage,
+          image: post.coverImage as any,
           keywords,
           author: {
             name: `${author.firstName} ${author.lastName}`,
@@ -67,7 +67,7 @@ const BlogPost = () => {
         keywords={keywords}
         ogTitle={title}
         ogDescription={description}
-        ogImage={post.coverImage}
+        ogImage={post.coverImage as any}
         ogUrl={postUrl}
         canonical={postUrl}
       />

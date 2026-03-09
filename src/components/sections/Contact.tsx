@@ -2,7 +2,7 @@ import styles from '../../style'
 import { ContactForm, SubmitEngine } from '../contact'
 import { SocialMedia } from '../../assets/dataTypes'
 import { socialMedia } from '../../assets/constants'
-import { getActiveBreakpoint } from '../../utils'
+import { getActiveBreakpoint } from '../../utils/utils'
 import { ThemeContext } from '../theme/ThemeEngine'
 import { useContext } from 'react'
 

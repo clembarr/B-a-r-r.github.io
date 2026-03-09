@@ -133,7 +133,7 @@ const ProjectCard3D = ({ project, position, rotation, onClick }: ProjectCard3DPr
 
           {/* Tags */}
           <div className="flex flex-wrap gap-1 mt-auto">
-            {project.tags[currentLang].slice(0, 3).map((tag, index) => (
+            {project.tags[currentLang].slice(0, 3).map((tag: string, index: number) => (
               <span
                 key={index}
                 className="

@@ -8,7 +8,7 @@ import Sortingbar from "../search/Sortingbar";
 import { Retex } from "../../assets/dataTypes";
 import { LangContext } from "../language";
 import { RetexViewer, RetexContext } from "../retex";
-import { getActiveBreakpoint, randomNumberBetween } from "../../utils";
+import { getActiveBreakpoint, randomNumberBetween } from "../../utils/utils";
 import { noDataMessages, sortOptions } from "../../assets/constants";
 import { ThemeContext } from "../theme/ThemeEngine";
 import { ScrollReveal } from "../animations";
@@ -25,11 +25,12 @@ const ProjectsListing = () => {
         const matchingProjects: Retex[] = [];
         let allTags: string[];
         projects.filter((project) => toMatch.some((filter) => {
+            //specific filters (date, favorite) have their own logic
             switch (filter) {
                 case "ALL":
                     matchingProjects.push(project);
                     //favorite projects first
-                    matchingProjects.sort((a, b) => a.favorite === b.favorite ? randomNumberBetween(0,1) === 0 ? 1 : -1 : !a.favorite ? 1 : -1);
+                    matchingProjects.sort((a, b) => a.favorite === b.favorite ? a.date <= b.date ? 1 : -1 : !a.favorite ? 1 : -1);
                     break;
                 case "NEWEST":
                     matchingProjects.push(project);
@@ -39,6 +40,11 @@ const ProjectsListing = () => {
                     matchingProjects.push(project);
                     matchingProjects.sort((a, b) => a.date >= b.date ? 1 : -1);
                     break;
+                case "FAVORITE":
+                    if (project.favorite) {
+                        matchingProjects.push(project);
+                    }
+                    break;
                 default:
                     if (!(toMatch.length === 1 /** Does the filter comes from the sorting bar ? */
                         && (sortOptions.find((option) => option.context === filter)
@@ -47,14 +53,14 @@ const ProjectsListing = () => {
                     ) { 
                         if (filter.length > 1 && ((project.title[currentLang] || project.title[0]).toUpperCase().includes(filter) 
                         || project.description[currentLang].toUpperCase().includes(filter) 
-                        || (Object(project.specs).length > 0 && project.specs[currentLang].toUpperCase().includes(filter))
-                        || project.notions[currentLang]?.map((notion) => notion.toUpperCase()).includes(filter))
+                        || (Object(project.content.specs).length > 0 && project.content.specs[currentLang].toUpperCase().includes(filter))
+                        || project.content.notions[currentLang]?.map((notion: string) => notion.toUpperCase()).includes(filter))
                         ) { matchingProjects.push(project); break;}
                     }
                     
                     allTags = [];
                     for (const lang in project.tags) {
-                        allTags.push(...project.tags[lang].map((tag) => tag.toUpperCase()));
+                        allTags.push(...project.tags[lang].map((tag: string) => tag.toUpperCase()));
                     }
                     if (allTags.includes(filter.toUpperCase())) {
                         matchingProjects.push(project);
@@ -62,7 +68,7 @@ const ProjectsListing = () => {
             }
         }))
         setDisplayedProjects(
-            toMatch.includes("NEWEST") || toMatch.includes("OLDEST") || toMatch.includes("ALL") ? 
+            toMatch.includes("NEWEST") || toMatch.includes("OLDEST") || toMatch.includes("ALL") || toMatch.includes("FAVORITE") ? 
             matchingProjects : matchingProjects.sort(() => randomNumberBetween(0,1) === 0 ? 1 : -1)
         );
     }, [toMatch]);
@@ -123,20 +129,19 @@ const ProjectsListing = () => {
             relative
         `}
     >
-        <ScrollReveal direction="up" delay={0.2}>
+        <ScrollReveal direction="up" delay={0.2} className="w-full">
             <div id='search-options-container'
                 className=
                 {`
                     w-full
                     h-fit
-                    ${getActiveBreakpoint("number") as number > 1 ? styles.flexRow + " space-x-40" : styles.flexCol}
+                    ${getActiveBreakpoint("number") as number > 1 ? styles.flexRow + " gap-36" : styles.flexCol}
                     ${styles.contentCenter}
-                    mr-30
                 `}
             >
                 <Searchbar />
 
-                <Sortingbar options={sortOptions} />
+                <Sortingbar options={sortOptions} maxPills={3} />
             </div>
         </ScrollReveal>
         

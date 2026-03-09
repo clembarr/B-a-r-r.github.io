@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import styles from '../../style';
 import DOMPurify from 'dompurify';
-import { isOverflowing, truncateTextIfOverflow } from '../../utils';
+import { isOverflowing, truncateTextIfOverflow } from '../../utils/utils';
 import { ThemeContext } from '../theme/ThemeEngine';
 
 type CardProps = {

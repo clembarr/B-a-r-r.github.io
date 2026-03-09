@@ -25,6 +25,7 @@ type GalaxyNode = {
   size: number;
   cluster: string;
   color: string;
+  icon?: string;
 };
 
 type GalaxyLink = {
@@ -52,14 +53,14 @@ const CLUSTER_COLORS: Record<string, string> = {
   OTHER: '#71cbb3',
 };
 
-const CLUSTER_CENTERS: Record<string, { x: number; y: number }> = {
-  WEB: { x: 0.25, y: 0.25 },
-  SOFTWARE: { x: 0.75, y: 0.25 },
-  DATABASE: { x: 0.85, y: 0.55 },
-  BIGDATA: { x: 0.65, y: 0.8 },
-  FORMATING: { x: 0.25, y: 0.8 },
-  OTHER: { x: 0.5, y: 0.5 },
-};
+//const CLUSTER_CENTERS: Record<string, { x: number; y: number }> = {
+//  WEB: { x: 0.25, y: 0.25 },
+//  SOFTWARE: { x: 0.75, y: 0.25 },
+//  DATABASE: { x: 0.85, y: 0.55 },
+//  BIGDATA: { x: 0.65, y: 0.8 },
+//  FORMATING: { x: 0.25, y: 0.8 },
+//  OTHER: { x: 0.5, y: 0.5 },
+//};
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -279,25 +280,16 @@ const SkillGalaxy = ({ nodes, links, className = '' }: SkillGalaxyProps) => {
             );
           })}
 
-          {/* Nodes (stars) */}
+          {/* Nodes (stars or icons) */}
           {nodes.map((node, i) => {
             const px = node.x * W;
             const py = node.y * H;
-            const r = Math.max(3, node.size / 3);
+            const r = Math.max(12, node.size / 2); // Taille ajustée pour les icônes
             const isHovered = hoveredId === node.id;
+            
             return (
-              <motion.circle
+              <motion.g
                 key={node.id}
-                cx={px}
-                cy={py}
-                r={r}
-                fill={node.color}
-                fillOpacity={isHovered ? 1 : 0.8}
-                filter={isHovered ? 'url(#galaxy-glow-strong)' : 'url(#galaxy-glow)'}
-                style={{
-                  cursor: 'pointer',
-                  transition: 'fill-opacity 0.2s',
-                }}
                 initial={{ scale: 0, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{
@@ -314,7 +306,42 @@ const SkillGalaxy = ({ nodes, links, className = '' }: SkillGalaxyProps) => {
                   setHoveredId(null);
                   setTooltipPos(null);
                 }}
-              />
+                style={{ cursor: 'pointer' }}
+              >
+                {/* Background glow circle */}
+                <circle
+                  cx={px}
+                  cy={py}
+                  r={r + 4}
+                  fill={node.color}
+                  fillOpacity={isHovered ? 0.3 : 0}
+                  filter={isHovered ? 'url(#galaxy-glow-strong)' : 'url(#galaxy-glow)'}
+                  style={{ transition: 'fill-opacity 0.2s' }}
+                />
+                
+                {node.icon ? (
+                  <image
+                    href={node.icon}
+                    x={px - r}
+                    y={py - r}
+                    width={r * 2}
+                    height={r * 2}
+                    style={{
+                      opacity: isHovered ? 1 : 0.8,
+                      transition: 'opacity 0.2s'
+                    }}
+                  />
+                ) : (
+                  <circle
+                    cx={px}
+                    cy={py}
+                    r={Math.max(3, node.size / 3)}
+                    fill={node.color}
+                    fillOpacity={isHovered ? 1 : 0.8}
+                    style={{ transition: 'fill-opacity 0.2s' }}
+                  />
+                )}
+              </motion.g>
             );
           })}
 

@@ -1,3 +1,5 @@
+import { MediaType, ProjectMedia } from "../dataTypes";
+
 import gpgtool_home from "./gpgtool_home.png";
 import gpgtool_crypto_tool from "./gpgtool_crypto_tool.png";
 import gpgtool_pgp_diagram from "./gpgtool_pgp_diagram.png";
@@ -5,6 +7,8 @@ import gpgtool_keys_listing from "./gpgtool_keys_listing.jpg";
 import gpgtool_error_handling from "./gpgtool_error_handling.png";
 import dummy_arrays_code from "./dummy_arrays_code.png"
 import dummy_arrays_scheme from "./dummy_arrays_scheme.png"
+import dummy_arrays_bench from "./dummy_arrays_graph_bench.png"
+import dummy_arrays_optim from "./dummy_arrays_graph_optim.png"
 import portfolio from "./portfolio.jpg";
 import mstar_end_board from "./mstar_end_board.png";
 import mstar_mcts_algo from "./mstar_mcts_algo.png";
@@ -26,9 +30,27 @@ import eew_lang_bias from "./eew_lang_bias.png"
 import eew_logs_file from "./eew_logs_file.png"
 import eew_prompts from "./eew_prompts.png"
 import eew_basic_visuals from "./eew_basic_visuals.png"
+import scaleway_pipeline from "./scaleway_pipeline.png"
+import veridisquo_output from "./veridisquo_output.mp4"
+import veridisquo_front from "./veridisquo_front.png"
+import veridisquo_pipeline from "./veridisquo_pipeline.png"
+import veridisquo_trainloss from "./veridisquo_trainloss.png"
 
-export const projectsImages = {
-  
+export const veridisquoOutput: ProjectMedia = {
+    url: veridisquo_output,
+    type: MediaType.VIDEO,
+    alt: "Veridisquo project output video : original deepfake video versus heat mapped zones identified as deepfake by the model",
+}
+
+export const projectsMedia: Record<string, ProjectMedia> = {
+  veridisquoOutput,
+};
+
+export const projectsImages: Record<string, string> = {
+  veridisquo_trainloss,
+  veridisquo_pipeline,
+  veridisquo_front,
+  scaleway_pipeline,
   gpgtool_home,
   gpgtool_crypto_tool,
   gpgtool_pgp_diagram,
@@ -36,6 +58,8 @@ export const projectsImages = {
   gpgtool_error_handling,
   dummy_arrays_code,
   dummy_arrays_scheme,
+  dummy_arrays_bench,
+  dummy_arrays_optim,
   portfolio,
   mstar_end_board,
   mstar_mcts_algo,

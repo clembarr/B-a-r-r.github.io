@@ -1,4 +1,4 @@
-import { getRandomTailwindColor } from "./utils";
+import { getRandomTailwindColor } from "./utils/utils";
 
 const styles = {
 
@@ -244,7 +244,7 @@ const styles = {
 
   widgetCard: `
     px-4 py-3cc
-    rounded-lg
+    rounded-md
     bg-(--color-secondary)
     border border-(--color-tertiary)/15
   `,

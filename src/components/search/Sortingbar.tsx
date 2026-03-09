@@ -2,11 +2,12 @@ import { useContext, useEffect, useState } from "react"
 import styles from "../../style"
 import { SearchContext } from "./SearchEngine";
 import { DropdownSort } from "../dropdowns";
-import { getActiveBreakpoint } from "../../utils";
+import { getActiveBreakpoint } from "../../utils/utils";
 import { menuIcons } from "../../assets/menu_icons";
 import { LangContext } from "../language";
 import { ThemeContext } from "../theme/ThemeEngine";
 import { FilterOption } from "../../assets/dataTypes";
+import { translate } from "../../utils/assetsUtils";
 
 /** Options merged into the Date pill and excluded from the regular pills loop. */
 const DATE_OPTIONS = ["NEWEST", "OLDEST"];
@@ -95,9 +96,9 @@ const SortingBar = ({ options, maxPills = 4 }: SortingBarProps) => {
      */
     const getPillLabel = (option: FilterOption) => {
         const label = option.abreviation
-            ? (option.abreviation.content[currentLang] || option.abreviation.content[0])
-            : option.content[currentLang];
-        return label.toUpperCase();
+            ? translate(option.abreviation.content, currentLang)
+            : translate(option.content, currentLang);
+        return label?.toUpperCase() || "";
     };
 
     /** Shared pill class names. */
@@ -136,6 +137,7 @@ const SortingBar = ({ options, maxPills = 4 }: SortingBarProps) => {
         <div id="sorting-bar-container"
             className=
             {`
+                w-fit
                 ${styles.sizeFit}
                 ${styles.flexRow}
                 ${styles.contentCenter}
@@ -150,7 +152,7 @@ const SortingBar = ({ options, maxPills = 4 }: SortingBarProps) => {
                             ${pillBase}
                             ${isActive("ALL") ? pillActive : pillInactive}
                         `}
-                    > {allOption.content[currentLang].toUpperCase()} </button>
+                    > {translate(allOption.content, currentLang).toUpperCase()} </button>
 
                     <button
                         onClick={handleDateClick}
@@ -179,11 +181,11 @@ const SortingBar = ({ options, maxPills = 4 }: SortingBarProps) => {
                     {regularPills.slice(0, maxPills).map((option, index) => (
                         <button key={index}
                             onClick={() => { setSearchInput(""); updateSearch([option.context]); }}
-                            data-tooltip={option.abreviation ? option.content[currentLang] : undefined}
+                            data-tooltip={option.abreviation ? translate(option.content, currentLang) : undefined}
                             className={`
                                 ${pillBase}
                                 ${isActive(option.context) ? pillActive : pillInactive}
-                                ${(option.abreviation && (option.abreviation.content[currentLang] !== '')) ? 'pill-tooltip' : ''}
+                                ${(option.abreviation && (translate(option.abreviation.content, currentLang) !== '')) ? 'pill-tooltip' : ''}
                             `}
                         > {getPillLabel(option)} </button>
                     ))}
