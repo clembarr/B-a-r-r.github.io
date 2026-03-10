@@ -9,7 +9,6 @@ import { ThemeContext } from "../theme/ThemeEngine"
 import { adjustFontSize, getActiveBreakpoint, getLinkFromTypedLink, isOverflowing } from "../../utils/utils"
 import { aboutLinks } from "../../assets/constants"
 import AboutWidget from "../widgets/AboutWidget"
-import GraphWidget from "../widgets/GraphWidget"
 import { LanguageLevel } from "../../assets/dataTypes"
 import { MultilingualContent, MultilingualContentArray } from "../../utils/assetsUtils"
 
@@ -63,6 +62,7 @@ const About = () => {
           > {content} </ul>
         )}
         titleAdditionnalStyle="text-lg font-bold mb-4"
+        additionalTopStyles={`${styles.flexCol}`}
       />
     );
   }, [currentLang]);
@@ -74,11 +74,12 @@ const About = () => {
     const content: string[] = (widget.content as MultilingualContentArray)[currentLang] as string[];
     
     return (
-      <GraphWidget
+      <AboutWidget
         id={widget.id}
         title={widget.title[currentLang]}
-        tags={content}
+        content={content}
         titleAdditionnalStyle="text-lg font-bold mb-4"
+        additionalTopStyles={`${styles.flexCol}`}
       />
     );
   }
@@ -102,6 +103,7 @@ const About = () => {
         content={(<p dangerouslySetInnerHTML={{__html: DOMPurify.sanitize((widget.content as MultilingualContent)[currentLang])}} />)}
         titleAdditionnalStyle="text-lg font-bold mb-2"
         contentStyle=""
+        additionalTopStyles={`${styles.flexCol}`}
       />
     );
   }

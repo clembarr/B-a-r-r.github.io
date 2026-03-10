@@ -5,18 +5,18 @@ import { menuIcons } from "../../assets";
 import { ThemeContext } from "../theme/ThemeEngine";
 import { getActiveBreakpoint } from "../../utils/utils";
 import { galleryControls } from "../../assets/constants";
-import { GalleryAction } from "../../assets/dataTypes";
+import { GalleryAction, ProjectMedia } from "../../assets/dataTypes";
 import { motion } from "framer-motion";
 
 type RetexGalleryViewerProps = {
-    images: string[];
+    images: string[] | ProjectMedia[];
     untoggler: () => void;
 }
 
 const RetexGalleryViewer = ({images, untoggler}: RetexGalleryViewerProps) => {
     const HINTS_DELAY_MS: number = 5000;
     const {currentTheme} = useContext(ThemeContext);
-    const [focusedImage, setFocusedImage] = useState<string>(images[0]);
+    const [focusedImage, setFocusedImage] = useState<string | ProjectMedia>(images[0]);
     const [zoom, setZoom] = useState<number>(1);
     const [panOffset, setPanOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
     const [showHints, setShowHints] = useState<boolean>(true);
@@ -110,7 +110,7 @@ const RetexGalleryViewer = ({images, untoggler}: RetexGalleryViewerProps) => {
                 <motion.img
                     ref={imageRef}
                     id="gallery-focused-image"
-                    src={focusedImage || ''}
+                    src={(focusedImage as ProjectMedia) ? (focusedImage as ProjectMedia).url : focusedImage as string || ''}
                     alt={`Focused Retex Image`}
                     className=
                     {`
@@ -182,7 +182,7 @@ const RetexGalleryViewer = ({images, untoggler}: RetexGalleryViewerProps) => {
                 >
                     {images ? images.map((image, index) => (
                         <img key={`retex-gallery-image-${index}`}
-                            src={image}
+                            src={(image as ProjectMedia) ? (image as ProjectMedia).url : image as string || ''}
                             alt={`Retex Gallery Image ${index + 1}`}
                             className=
                             {`
@@ -241,7 +241,7 @@ const RetexGalleryViewer = ({images, untoggler}: RetexGalleryViewerProps) => {
             >
                 {images.map((image, idx) => (
                     <img key={`retex-gallery-mobile-image-${idx}`}
-                        src={image}
+                        src={(image as ProjectMedia) ? (image as ProjectMedia).url : image as string || ''}
                         alt={`Retex Gallery Mobile Image ${idx + 1}`}
                         className={`
                             object-contain

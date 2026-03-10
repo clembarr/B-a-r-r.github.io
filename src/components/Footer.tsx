@@ -1,5 +1,5 @@
 import styles from "../style"
-import { copyrigthText } from "../assets/constants"
+import { copyrigthText, navLinks } from "../assets/constants"
 import { getActiveBreakpoint, getCurrentNavigation, getLinkFromTypedLink, shuffle } from "../utils/utils"
 import { useContext, useEffect, useState } from "react"
 import { footerColumns } from "../assets/contents"
@@ -67,6 +67,7 @@ const Footer = () => {
 
       case "credits": {
         const credits = content as CreditMention[];
+
         return credits.map((credit, index) => (
           <a key={`credit-${index}`}
             id={`credit-${credit.content[currentLang]}`}
@@ -94,8 +95,13 @@ const Footer = () => {
       }
 
       case "see-also": {
+        const currentPattern = navLinks.filter(
+          (pattern) => pattern.route.includes(window.location.pathname.split("/")[1])
+        )[0];
+        const countNavLinks = currentPattern ? currentPattern.links.length : 4;
         const links = content as Hyperlink[];
-        return shuffle(shuffle(links)).slice(0, 4).map((link, index) => (
+
+        return shuffle(shuffle(links)).slice(0, countNavLinks).map((link, index) => (
           <a key={`see-also-${index}`}
             id={`see-also-${index}`}
             href={getLinkFromTypedLink(link.link, currentLang)}

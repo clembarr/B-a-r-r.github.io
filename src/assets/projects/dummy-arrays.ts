@@ -6,14 +6,14 @@
 import { Retex } from '../dataTypes';
 import { UNIVERSAL_LANG } from '../../utils/translationUtils';
 import { getSkill } from '../../utils/assetsUtils';
-import { projectsImages } from '../index';
+import { projectsMedia } from '../projects_images';
 
 export const dummyArrays: Retex = {
   title: {
     [UNIVERSAL_LANG]: "Dummy Arrays"
   },
   date: new Date(2025, 0),
-  coverImage: projectsImages.dummy_arrays_scheme,
+  coverImage: projectsMedia.dummyArraysScheme,
   tags: {
     en: ["Structures", "Optim.", "Benchmark", "Academic", "University", "Systems", "FP", "Memory"],
     fr: ["Structures", "Optim.", "Benchmark", "Académique", "Univeristaire", "Systèmes", "PF", "Mémoire"],
@@ -55,10 +55,10 @@ export const dummyArrays: Retex = {
       getSkill('Git'),
     ],
     images: [
-      projectsImages.dummy_arrays_scheme,
-      projectsImages.dummy_arrays_graph_bench,
-      projectsImages.dummy_arrays_graph_optim,
-      projectsImages.dummy_arrays_code
+      projectsMedia.dummyArraysScheme,
+      projectsMedia.dummyArraysBench,
+      projectsMedia.dummyArraysOptim,
+      projectsMedia.dummyArraysCode
     ],
     additionalRessources: [
       {

@@ -1,4 +1,4 @@
-import { author, APP_URL } from "./config";
+import { author, APP_URL } from "./configConstants";
 import { SEOConstants } from "./dataTypes";
 
 export const BlogSEOConstants: SEOConstants = {

@@ -1,8 +1,89 @@
 import { MultilingualContent, MultilingualContentArray } from "../utils/translationUtils";
-
 export type { MultilingualContent, MultilingualContentArray };
 
-/** The career entry types supported by the app. */
+/**
+ * @interface PlacedTag
+ * @description Stores the computed position and measured dimensions of a placed tag.
+ * @property tag - The original tag string.
+ * @property x - The x-coordinate of the top-left corner of the tag.
+ * @property y - The y-coordinate of the top-left corner of the tag.
+ * @property w - The width of the tag.
+ * @property h - The height of the tag.
+ */
+export interface PlacedTag {
+  tag: string;
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
+/**
+ * @interface SkillNode
+ * @description Represents a skill in the SkillGalaxy, with position, size, cluster, color and icon information for visualization.
+ * @property id - The unique identifier of the skill.
+ * @property label - The label or name of the skill.
+ * @property x - The x-coordinate of the skill's position.
+ * @property y - The y-coordinate of the skill's position.
+ * @property size - The size of the skill's circle.
+ * @property cluster - The cluster or category to which the skill belongs.
+ * @property color - The color of the skill's circle.
+ * @property icon - The icon associated with the skill.
+ */
+export interface SkillNode {
+  id: string;
+  label: string;
+  x: number;
+  y: number;
+  size: number;
+  cluster: string;
+  color: string;
+  icon?: string;
+};
+
+/**
+ * @interface SkillLink
+ * @description Represents a link between two skills in the SkillGalaxy, with source and target skill IDs and a type for categorization.
+ * @property source - The ID of the source skill.
+ * @property target - The ID of the target skill.
+ * @property type - The type of the link, which can be 'framework' or 'career' to indicate the nature of the relationship between the skills.
+ */
+export interface SkillLink {
+  source: string;
+  target: string;
+  type: string;
+}
+
+/**
+ * @interface GalaxyLink
+ * @description The props expected by the SkillGalaxy component, including arrays of skill nodes and links, and an optional className for styling.
+ * @property source - The ID of the source skill.
+ * @property target - The ID of the target skill.
+ * @property type - The type of the link, which can be 'framework' or 'career' to indicate the nature of the relationship between the skills.
+ */
+export type GalaxyLink = {
+  source: string;
+  target: string;
+  type: 'framework' | 'career';
+};
+
+/**
+ * @interface SkillGalaxyProps
+ * @description The props expected by the SkillGalaxy component, including arrays of skill nodes and links, and an optional className for styling.
+ * @property nodes - An array of SkillNode objects representing the skills to be displayed in the galaxy.
+ * @property links - An array of GalaxyLink objects representing the relationships between the skills.
+ * @property className - An optional string for additional CSS classes to style the component.
+ */
+export type SkillGalaxyProps = {
+  nodes: SkillNode[];
+  links: GalaxyLink[];
+  className?: string;
+};
+
+/** 
+ * @enum CareerEntryType
+ * @description The career entry types supported by the app. 
+*/
 export enum CareerEntryType {
   EDUCATION = "EDUCATION",
   EXPERIENCE = "EXPERIENCE",
@@ -11,7 +92,8 @@ export enum CareerEntryType {
 }
 
 /**
- * Structure of a career timeline entry.
+ * @interface CareerEntry
+ * @description Structure of a career timeline entry.
  */
 export interface CareerEntry {
   type: CareerEntryType;

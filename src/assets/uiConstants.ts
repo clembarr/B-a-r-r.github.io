@@ -23,7 +23,7 @@ import {
   CareerEntryType,
 } from "./dataTypes";
 import { UNIVERSAL_LANG } from "../utils/translationUtils";
-import { emailAPI } from "./config";
+import { emailAPI } from "./configConstants";
 
 export const CARD_TEXT_MAX_LINES = 5;
 
@@ -1303,4 +1303,13 @@ export const careerTypeLabels: {[type: string]: {[lang: string]: string}} = {
     fr: "Bénévolat", 
     en: "Volunteering" 
   },
+};
+
+export const GALAXY_CLUSTER_COLORS: Record<string, string> = {
+  WEB: '#7CFFC4',
+  SOFTWARE: '#FF6B6B',
+  DATABASE: '#4ECDC4',
+  BIGDATA: '#FFE66D',
+  FORMATING: '#A78BFA',
+  OTHER: '#71cbb3',
 };

@@ -287,7 +287,7 @@ export const skills: Array<Skill> = [
     link: 'https://axios-http.com/docs/intro'
   },
   {
-    label: "Unittest",
+    label: "PyTest",
     icon: skillsIcons.unittest_icon,
     category: skillCategories.find((category) => category.context === AvailableSkillCategories.LIBRARY)!,
     link: 'https://docs.python.org/3/library/unittest.html'

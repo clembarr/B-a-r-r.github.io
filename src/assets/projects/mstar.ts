@@ -15,8 +15,8 @@ export const mstar: Retex = {
   date: new Date(2024, 10),
   coverImage: projectsImages.mstar_tournament_results,
   tags: {
-    fr: ["PC", "Machine learning", "POO", "IA", "Académique", "Universitaire", "Programmation concurrente", "Algorithmie", "Programmation fonctionnelle"],
-    en: ["CP", "Machine learning", "OOP", "Algorithmic", "AI", "Academic", "University", "Parrallel programming", 'Functionnal programming'],
+    fr: ["Algo", "Machine learning", "POO", "IA", "Académique", "PC", "Universitaire", "Programmation concurrente", "Algorithmie", "Programmation fonctionnelle"],
+    en: ["Algo", "Machine learning", "OOP", "Algorithmic", "AI", "CP", "Academic", "University", "Parrallel programming", 'Functionnal programming'],
     [UNIVERSAL_LANG]: ["Algo", "Test", "Tests", "Monte Carlo", "Pathfinding"],
   },
   description: {

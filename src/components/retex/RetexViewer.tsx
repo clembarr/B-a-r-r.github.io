@@ -1,7 +1,7 @@
 import { projects } from "../../assets/contents";
 import styles from '../../style';
 import DOMPurify from 'dompurify';
-import { adjustFontSize, getActiveBreakpoint, isOverflowing } from '../../utils/utils';
+import { adjustFontSize, getActiveBreakpoint, getLinkFromTypedLink, isOverflowing } from '../../utils/utils';
 import { useContext, useCallback, useEffect, useRef, useState } from 'react';
 import { LangContext } from '../language';
 import { coreImages, menuIcons } from '../../assets';
@@ -11,7 +11,7 @@ import RetexHeader from './RetexHeader';
 import RetexGalleryViewer from './RetexGalleryViewer';
 import { ThemeContext } from "../theme/ThemeEngine";
 import { ProjectMedia, MediaType } from "../../assets/dataTypes";
-import { translate } from "../../utils/assetsUtils";
+import { translate, UNIVERSAL_LANG } from "../../utils/assetsUtils";
 
 const RetexViewer = () => {
     const { currentLang } = useContext(LangContext);
@@ -116,13 +116,13 @@ const RetexViewer = () => {
 
     const relatedProject = projects.find((project) => {
         return (translate(project.title, currentLang) === displayedRetexTitle
-        || translate(project.title, "0") === displayedRetexTitle);
+        || translate(project.title, UNIVERSAL_LANG) === displayedRetexTitle);
     });
     if (!displayedRetexTitle) return;
     if (!relatedProject) {console.warn(`No project found for '${displayedRetexTitle}'.`); return;}
 
     /** Notions list capped by maxNotions to avoid overflow without DOM mutation. */
-    const displayedNotions = (relatedProject.content.notions[currentLang] || relatedProject.content.notions["0"] || []).slice(0, maxNotions);
+    const displayedNotions = (relatedProject.content.notions[currentLang] || relatedProject.content.notions[UNIVERSAL_LANG] || []).slice(0, maxNotions);
 
     /**
      * Normalizes media input (string or ProjectMedia) into a ProjectMedia object.
@@ -225,7 +225,7 @@ const RetexViewer = () => {
                 `}
             >
                 {toggleGallery && relatedProject.content.images && relatedProject.content.images.length > 0
-                ? <RetexGalleryViewer images={relatedProject.content.images} untoggler={() => setToggleGallery(false)}/>
+                ? <RetexGalleryViewer images={projectMedia} untoggler={() => setToggleGallery(false)}/>
                 : <>
                     <button
                         type="button"
@@ -434,7 +434,7 @@ const RetexViewer = () => {
                             >
                                 <a target='_blank'
                                     rel="noopener noreferrer"
-                                    href={resource.link as any}
+                                    href={getLinkFromTypedLink(resource.link)}
                                 > → {translate(resource.content, currentLang)} </a>
                             </li>
                         ))

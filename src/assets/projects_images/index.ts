@@ -42,8 +42,36 @@ export const veridisquoOutput: ProjectMedia = {
     alt: "Veridisquo project output video : original deepfake video versus heat mapped zones identified as deepfake by the model",
 }
 
+export const dummyArraysCode: ProjectMedia = {
+    url: dummy_arrays_code,
+    type: MediaType.IMAGE,
+    alt: "Code snippet of the Rust implementation of the Dummy Arrays project, showcasing the use of HashMap and Vec for efficient data management."
+}
+
+export const dummyArraysScheme: ProjectMedia = {
+    url: dummy_arrays_scheme,
+    type: MediaType.IMAGE,
+    alt: "Diagram illustrating the structure of the Dummy Arrays associative data structure, highlighting its components and their interactions."
+}
+
+export const dummyArraysBench: ProjectMedia = {
+    url: dummy_arrays_bench,
+    type: MediaType.IMAGE,
+    alt: "Benchmark graph comparing the performance of the Rust and Go implementations of the Dummy Arrays project, showing execution time across different input sizes."
+}
+
+export const dummyArraysOptim: ProjectMedia = {
+    url: dummy_arrays_optim,
+    type: MediaType.IMAGE,
+    alt: "Graph illustrating the optimization results for the Dummy Arrays project, comparing the original and optimized versions in terms of execution time and memory usage."
+} 
+
 export const projectsMedia: Record<string, ProjectMedia> = {
   veridisquoOutput,
+  dummyArraysCode,
+  dummyArraysScheme,
+  dummyArraysBench,
+  dummyArraysOptim,
 };
 
 export const projectsImages: Record<string, string> = {
@@ -56,10 +84,6 @@ export const projectsImages: Record<string, string> = {
   gpgtool_pgp_diagram,
   gpgtool_keys_listing,
   gpgtool_error_handling,
-  dummy_arrays_code,
-  dummy_arrays_scheme,
-  dummy_arrays_bench,
-  dummy_arrays_optim,
   portfolio,
   mstar_end_board,
   mstar_mcts_algo,

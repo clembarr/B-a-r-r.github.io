@@ -3,33 +3,16 @@ import { ThemeContext } from '../theme/ThemeEngine';
 import styles from '../../style';
 import DOMPurify from 'dompurify';
 import AboutWidget from './AboutWidget';
+import { PlacedTag } from '../../assets/dataTypes';
+import { GraphWidgetConstants } from '../../assets/motionConstants';
 
 /**
- * @interface PlacedTag
- * @description Stores the computed position and measured dimensions of a placed tag.
- */
-interface PlacedTag {
-  tag: string;
-  x: number;
-  y: number;
-  w: number;
-  h: number;
-}
-
-/**
- * @constant GAP_PX minimum gap between any two tags (px)
- * @constant EDGE_PX minimum distance from container edges (px)
- * @constant FLOAT_AMP_PX maximum translation from the CSS float animation (px)
- */
-const GAP_PX = 10;
-const EDGE_PX = 6;
-const FLOAT_AMP_PX = 4;
-
-/**
- * @function computeLayout Place tags without overlap using measured widths/heights.
- * Uses greedy random placement with AABB collision detection. The available area
- * is shrunk by FLOAT_AMP_PX on each side so the floating animation never pushes
- * a tag outside the container.
+ * @function computeLayout Place tags without overlap using iterative relaxation
+ * (AABB separation). All tags are placed randomly first, then overlapping pairs
+ * are pushed apart along their axis of least overlap until no collisions remain
+ * or the iteration budget is exhausted. The available area is shrunk by
+ * FLOAT_AMP_PX on each side so the floating animation never pushes a tag outside
+ * the container.
  * @param measured - array of { tag, w, h } with real DOM measurements
  * @param cw - container width in px
  * @param ch - container height in px
@@ -40,53 +23,64 @@ const computeLayout = (
   cw: number,
   ch: number,
 ): PlacedTag[] => {
-  const placed: PlacedTag[] = [];
-  const inset = EDGE_PX + FLOAT_AMP_PX;
+  const inset = GraphWidgetConstants.EDGE_PX + GraphWidgetConstants.FLOAT_AMP_PX;
+  const gap = GraphWidgetConstants.GAP_PX;
 
-  for (const { tag, w, h } of measured) {
-    const minX = inset;
-    const minY = inset;
-    const maxX = cw - w - inset;
-    const maxY = ch - h - inset;
+  /** Initial random placement within safe bounds. */
+  const placed: PlacedTag[] = measured.map(({ tag, w, h }) => {
+    const maxX = Math.max(inset, cw - w - inset);
+    const maxY = Math.max(inset, ch - h - inset);
+    return {
+      tag,
+      x: inset + Math.random() * (maxX - inset),
+      y: inset + Math.random() * (maxY - inset),
+      w,
+      h,
+    };
+  });
 
-    if (maxX <= minX || maxY <= minY) {
-      placed.push({ tag, x: minX, y: minY, w, h });
-      continue;
-    }
+  /**
+   * Iterative separation in two distinct phases per pass:
+   * 1. Push all overlapping pairs apart (half the overlap each, no clamping yet).
+   * 2. Clamp every item to the safe zone.
+   * Separating phases prevents a clamp on item i from immediately creating a new
+   * collision that the current pass cannot see. Early-exits only when no pair
+   * overlapped at all — not after a clamp-induced oscillation.
+   */
+  for (let iter = 0; iter < 400; iter++) {
+    let moved = false;
 
-    let bestX = minX;
-    let bestY = minY;
-    let found = false;
-
-    for (let trial = 0; trial < 1200; trial++) {
-      const cx = minX + Math.random() * (maxX - minX);
-      const cy = minY + Math.random() * (maxY - minY);
-
-      const collides = placed.some((p) =>
-        cx < p.x + p.w + GAP_PX &&
-        cx + w + GAP_PX > p.x &&
-        cy < p.y + p.h + GAP_PX &&
-        cy + h + GAP_PX > p.y,
-      );
-
-      if (!collides) {
-        bestX = cx;
-        bestY = cy;
-        found = true;
-        break;
+    /** Phase 1 — separation only, no clamping. */
+    for (let i = 0; i < placed.length; i++) {
+      for (let j = i + 1; j < placed.length; j++) {
+        const a = placed[i];
+        const b = placed[j];
+        const overlapX = Math.min(a.x + a.w + gap - b.x, b.x + b.w + gap - a.x);
+        const overlapY = Math.min(a.y + a.h + gap - b.y, b.y + b.h + gap - a.y);
+        if (overlapX > 0 && overlapY > 0) {
+          /** Half-overlap push avoids overshooting and oscillation. */
+          const push = (overlapX < overlapY ? overlapX : overlapY) / 2;
+          if (overlapX < overlapY) {
+            const dir = a.x + a.w / 2 <= b.x + b.w / 2 ? -1 : 1;
+            a.x += dir * push;
+            b.x -= dir * push;
+          } else {
+            const dir = a.y + a.h / 2 <= b.y + b.h / 2 ? -1 : 1;
+            a.y += dir * push;
+            b.y -= dir * push;
+          }
+          moved = true;
+        }
       }
     }
 
-    if (!found) {
-      // Fallback: stack vertically with gap
-      const lastY = placed.length > 0
-        ? placed[placed.length - 1].y + placed[placed.length - 1].h + GAP_PX
-        : minY;
-      bestX = minX;
-      bestY = lastY <= maxY ? lastY : minY;
+    /** Phase 2 — clamp every item after all pairs have been resolved. */
+    for (const p of placed) {
+      p.x = Math.max(inset, Math.min(cw - p.w - inset, p.x));
+      p.y = Math.max(inset, Math.min(ch - p.h - inset, p.y));
     }
 
-    placed.push({ tag, x: bestX, y: bestY, w, h });
+    if (!moved) break;
   }
 
   return placed;

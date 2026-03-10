@@ -122,8 +122,8 @@ export const sharedLinks: Array<Hyperlink> = [
   {
     content:
     {
-      fr: "Mathieu, data engineer",
-      en: "Mathieu, engénieur data",
+      fr: "Mathieu, engénieur data",
+      en: "Mathieu, data engineer",
     },
     link: "https://matjay.me",
   },

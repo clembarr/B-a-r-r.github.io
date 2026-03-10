@@ -12,66 +12,15 @@
 import { useContext, useRef, useState, useEffect, useMemo } from 'react';
 import { ThemeContext } from '../theme/ThemeEngine';
 import { motion, useInView } from 'framer-motion';
-
-// ---------------------------------------------------------------------------
-// Types (local to component)
-// ---------------------------------------------------------------------------
-
-type GalaxyNode = {
-  id: string;
-  label: string;
-  x: number;
-  y: number;
-  size: number;
-  cluster: string;
-  color: string;
-  icon?: string;
-};
-
-type GalaxyLink = {
-  source: string;
-  target: string;
-  type: 'framework' | 'career';
-};
-
-type SkillGalaxyProps = {
-  nodes: GalaxyNode[];
-  links: GalaxyLink[];
-  className?: string;
-};
-
-// ---------------------------------------------------------------------------
-// Constants
-// ---------------------------------------------------------------------------
-
-const CLUSTER_COLORS: Record<string, string> = {
-  WEB: '#7CFFC4',
-  SOFTWARE: '#FF6B6B',
-  DATABASE: '#4ECDC4',
-  BIGDATA: '#FFE66D',
-  FORMATING: '#A78BFA',
-  OTHER: '#71cbb3',
-};
-
-//const CLUSTER_CENTERS: Record<string, { x: number; y: number }> = {
-//  WEB: { x: 0.25, y: 0.25 },
-//  SOFTWARE: { x: 0.75, y: 0.25 },
-//  DATABASE: { x: 0.85, y: 0.55 },
-//  BIGDATA: { x: 0.65, y: 0.8 },
-//  FORMATING: { x: 0.25, y: 0.8 },
-//  OTHER: { x: 0.5, y: 0.5 },
-//};
-
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
+import { SkillGalaxyProps, SkillNode } from '../../assets/dataTypes';
+import { GALAXY_CLUSTER_COLORS } from '../../assets/uiConstants';
 
 /**
  * @function getClusterEllipse Compute the bounding ellipse for a cluster's nodes
  * with some padding, used to draw the zone background.
  */
 const getClusterEllipse = (
-  clusterNodes: GalaxyNode[],
+  clusterNodes: SkillNode[],
   w: number,
   h: number,
 ) => {
@@ -84,10 +33,6 @@ const getClusterEllipse = (
   const ry = Math.max(40, (Math.max(...ys) - Math.min(...ys)) / 2 + 35);
   return { cx, cy, rx, ry };
 };
-
-// ---------------------------------------------------------------------------
-// Sub-components
-// ---------------------------------------------------------------------------
 
 /**
  * Animated particle that travels along a link path.
@@ -156,14 +101,14 @@ const SkillGalaxy = ({ nodes, links, className = '' }: SkillGalaxyProps) => {
 
   // Node map for quick lookup
   const nodeMap = useMemo(() => {
-    const m = new Map<string, GalaxyNode>();
+    const m = new Map<string, SkillNode>();
     nodes.forEach(n => m.set(n.id, n));
     return m;
   }, [nodes]);
 
   // Group nodes by cluster
   const clusters = useMemo(() => {
-    const map = new Map<string, GalaxyNode[]>();
+    const map = new Map<string, SkillNode[]>();
     nodes.forEach(n => {
       if (!map.has(n.cluster)) map.set(n.cluster, []);
       map.get(n.cluster)!.push(n);
@@ -206,7 +151,7 @@ const SkillGalaxy = ({ nodes, links, className = '' }: SkillGalaxyProps) => {
           {Array.from(clusters.entries()).map(([cluster, clusterNodes]) => {
             const ell = getClusterEllipse(clusterNodes, W, H);
             if (!ell) return null;
-            const color = CLUSTER_COLORS[cluster] ?? CLUSTER_COLORS.OTHER;
+            const color = GALAXY_CLUSTER_COLORS[cluster] ?? GALAXY_CLUSTER_COLORS.OTHER;
             return (
               <motion.g key={`cluster-${cluster}`}>
                 <motion.ellipse
@@ -215,11 +160,11 @@ const SkillGalaxy = ({ nodes, links, className = '' }: SkillGalaxyProps) => {
                   rx={ell.rx}
                   ry={ell.ry}
                   fill={color}
-                  fillOpacity={isDark ? 0.04 : 0.06}
+                  fillOpacity={isDark ? 0.02 : 0.03}
                   stroke={color}
-                  strokeOpacity={0.12}
+                  strokeOpacity={0.06}
                   strokeWidth={1}
-                  strokeDasharray="4 4"
+                  strokeDasharray="4 6"
                   initial={{ scale: 0, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   transition={{ duration: 0.8, delay: 0.2 }}
@@ -254,7 +199,7 @@ const SkillGalaxy = ({ nodes, links, className = '' }: SkillGalaxyProps) => {
             const x2 = t.x * W;
             const y2 = t.y * H;
             const color = link.type === 'framework'
-              ? (CLUSTER_COLORS[s.cluster] ?? '#71cbb3')
+              ? (GALAXY_CLUSTER_COLORS[s.cluster] ?? '#71cbb3')
               : '#A78BFA';
             const isHighlighted = hoveredId === s.id || hoveredId === t.id;
             return (
@@ -284,64 +229,78 @@ const SkillGalaxy = ({ nodes, links, className = '' }: SkillGalaxyProps) => {
           {nodes.map((node, i) => {
             const px = node.x * W;
             const py = node.y * H;
-            const r = Math.max(12, node.size / 2); // Taille ajustée pour les icônes
+            const r = Math.max(20, node.size); // Taille ajustée pour les icônes
             const isHovered = hoveredId === node.id;
-            
+            const floatDuration = 4 + (i * 1.3) % 4;
+            const floatDelay = -((i * 0.7) % floatDuration);
+
             return (
-              <motion.g
+              /** Outer <g> drives the organic float via CSS animation */
+              <g
                 key={node.id}
-                initial={{ scale: 0, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{
-                  type: 'spring',
-                  stiffness: 150,
-                  damping: 15,
-                  delay: 0.3 + i * 0.04,
+                style={{
+                  animationName: 'graph-widget-float',
+                  animationDuration: `${floatDuration}s`,
+                  animationDelay: `${floatDelay}s`,
+                  animationTimingFunction: 'ease-in-out',
+                  animationIterationCount: 'infinite',
                 }}
-                onMouseEnter={() => {
-                  setHoveredId(node.id);
-                  setTooltipPos({ x: px, y: py });
-                }}
-                onMouseLeave={() => {
-                  setHoveredId(null);
-                  setTooltipPos(null);
-                }}
-                style={{ cursor: 'pointer' }}
               >
-                {/* Background glow circle */}
-                <circle
-                  cx={px}
-                  cy={py}
-                  r={r + 4}
-                  fill={node.color}
-                  fillOpacity={isHovered ? 0.3 : 0}
-                  filter={isHovered ? 'url(#galaxy-glow-strong)' : 'url(#galaxy-glow)'}
-                  style={{ transition: 'fill-opacity 0.2s' }}
-                />
-                
-                {node.icon ? (
-                  <image
-                    href={node.icon}
-                    x={px - r}
-                    y={py - r}
-                    width={r * 2}
-                    height={r * 2}
-                    style={{
-                      opacity: isHovered ? 1 : 0.8,
-                      transition: 'opacity 0.2s'
-                    }}
-                  />
-                ) : (
+                {/** Inner motion.g handles entrance (scale + opacity) */}
+                <motion.g
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{
+                    type: 'spring',
+                    stiffness: 150,
+                    damping: 15,
+                    delay: 0.3 + i * 0.04,
+                  }}
+                  onMouseEnter={() => {
+                    setHoveredId(node.id);
+                    setTooltipPos({ x: px, y: py });
+                  }}
+                  onMouseLeave={() => {
+                    setHoveredId(null);
+                    setTooltipPos(null);
+                  }}
+                  style={{ cursor: 'pointer' }}
+                >
+                  {/* Background glow circle */}
                   <circle
                     cx={px}
                     cy={py}
-                    r={Math.max(3, node.size / 3)}
+                    r={r + 4}
                     fill={node.color}
-                    fillOpacity={isHovered ? 1 : 0.8}
+                    fillOpacity={isHovered ? 0.3 : 0}
+                    filter={isHovered ? 'url(#galaxy-glow-strong)' : 'url(#galaxy-glow)'}
                     style={{ transition: 'fill-opacity 0.2s' }}
                   />
-                )}
-              </motion.g>
+
+                  {node.icon ? (
+                    <image
+                      href={node.icon}
+                      x={px - r}
+                      y={py - r}
+                      width={r * 2}
+                      height={r * 2}
+                      style={{
+                        opacity: isHovered ? 1 : 0.8,
+                        transition: 'opacity 0.2s'
+                      }}
+                    />
+                  ) : (
+                    <circle
+                      cx={px}
+                      cy={py}
+                      r={Math.max(3, node.size / 3)}
+                      fill={node.color}
+                      fillOpacity={isHovered ? 1 : 0.8}
+                      style={{ transition: 'fill-opacity 0.2s' }}
+                    />
+                  )}
+                </motion.g>
+              </g>
             );
           })}
 
@@ -396,7 +355,7 @@ const SkillGalaxy = ({ nodes, links, className = '' }: SkillGalaxyProps) => {
               Career
             </span>
           </div>
-          {Object.entries(CLUSTER_COLORS).filter(([k]) => clusters.has(k)).map(([k, c]) => (
+          {Object.entries(GALAXY_CLUSTER_COLORS).filter(([k]) => clusters.has(k)).map(([k, c]) => (
             <div key={k} className="flex items-center gap-1.5">
               <span className="inline-block w-2 h-2 rounded-full" style={{ background: c }} />
               <span className="text-[10px] font-secondary-regular" style={{ color: mutedText }}>
