@@ -60,8 +60,8 @@ const ErrPage = ({ error }: ErrPageProps) => {
             hover:bg-(--color-secondary)
             hover:scale-105
             ${styles.defaultTransition}
-            px-[1%]
-            py-[0.5%]
+            px-4
+            py-2
           `}
           to='/'
         > {placeholderMessages.find((message) => message.context === "ErrorPageBackButton")!.content[currentLang]} </Link>

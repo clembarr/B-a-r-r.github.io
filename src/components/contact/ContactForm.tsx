@@ -112,11 +112,11 @@ const ContactForm = () => {
           h-1/5
           ${styles.contentStartAll}
           font-primary-bold
-          base:text-base
+          text-base
           ${styles.heading2}
           tracking-wider
           
-          xl:mb-[10%] base:mb-[8%]
+          mb-[8%] xl:mb-[10%]
         `}
         dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(contactForm.title[currentLang])}}
       />

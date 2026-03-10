@@ -4,7 +4,6 @@ import DOMPurify from "dompurify"
 import { LangContext } from "../language"
 import { Retex } from "../../assets/dataTypes"
 import { ThemeContext } from "../theme/ThemeEngine"
-import { getActiveBreakpoint } from "../../utils/utils"
 import { menuIcons } from "../../assets"
 import { RetexContext } from "./RetexDisplayEngine"
 
@@ -19,8 +18,6 @@ const RetexHeader = (relatedProject: Retex) => {
     const { currentLang } = useContext(LangContext);
     const { currentTheme } = useContext(ThemeContext);
     const { setDisplayedRetex } = useContext(RetexContext);
-
-    const isMobile = (getActiveBreakpoint('number') as number) < 2;
 
     return (
         <header id='retex-header'
@@ -37,7 +34,7 @@ const RetexHeader = (relatedProject: Retex) => {
                 aria-label="Close"
                 className={`
                     absolute
-                    ${isMobile ? "" : "hidden"}
+                    md:hidden
                     top-[30px]
                     right-[30px]
                     z-23
@@ -99,7 +96,7 @@ const RetexHeader = (relatedProject: Retex) => {
 
                 <div id='retex-skills'
                     className={`
-                        ${isMobile ? styles.flexRow : styles.flexCol}
+                        ${styles.flexRowToColAtMd}
                         ${styles.sizeFull}
                         ${styles.contentStartX}
                         px-[10%]
@@ -113,10 +110,10 @@ const RetexHeader = (relatedProject: Retex) => {
                     {relatedProject.content.tools.slice(0, 6).map((tool, index) => (
                         <span key={`retex-skill-${index}`}
                             className={`
-                                ${isMobile ? styles.flexCol : styles.flexRow}
-                                ${styles.sizeFull}
-                                ${isMobile ? styles.contentStartY : styles.contentStartX}
-                                space-x-[8%]
+                                ${styles.flexColToRowAtMd}
+                                w-fit md:w-full h-full
+                                justify-center items-start md:justify-start md:items-center
+                                space-x-3 md:space-x-[8%]
                             `}
                         >
                             <img src={tool.icon.content[currentTheme]}
@@ -125,13 +122,13 @@ const RetexHeader = (relatedProject: Retex) => {
                                     object-cover
                                     object-center
                                     aspect-square
-                                    md:w-[25%] w-[80%]
+                                    w-8 md:w-[25%]
                                     max-w-[50px]
                                 `}
                             />
 
                             <span className={`
-                                ${isMobile ? "hidden" : ""}
+                                hidden md:inline
                                 font-primary-regular
                                 2xl:text-lg md:text-sm
                             `}> {tool.label} </span>
@@ -142,7 +139,7 @@ const RetexHeader = (relatedProject: Retex) => {
 
             <div id='retex-header-additional'
                 className={`
-                    ${isMobile ? "hidden" : styles.flexCol}
+                    ${styles.hiddenToFlexColAtMd}
                 `}
             >
                 <ul id='retex-header-additional-ressources'

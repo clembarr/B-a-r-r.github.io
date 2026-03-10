@@ -324,7 +324,7 @@ const ArticleLayout = ({ post, relatedPosts = [] }: ArticleLayoutProps) => {
           <div id="article-content"
             className={`
               font-primary-regular
-              2xl:text-md xl:text-lg md:text-md base:text-2xs
+              text-2xs md:text-md xl:text-lg 2xl:text-md
               tracking-wide
               text-wrap
               whitespace-pre-line

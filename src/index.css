@@ -779,12 +779,12 @@ input:focus, textarea:focus {
 }
 
 /* ───────────────────────────────────────────────
-   Prism.js — VS Code "Dark Modern" theme
-   Always dark regardless of the app's light/dark
-   theme, matching VS Code's default dark palette.
+Prism.js — VS Code "Dark Modern" theme
+Always dark regardless of the app's light/dark
+theme, matching VS Code's default dark palette.
 
-   All token rules are scoped under #article-content
-   to beat Tailwind Typography specificity.
+All token rules are scoped under #article-content
+to beat Tailwind Typography specificity.
    ─────────────────────────────────────────────── */
 
 /* ── Inline code (not inside code blocks) ── */
@@ -797,10 +797,10 @@ input:focus, textarea:focus {
   font-family: ui-monospace, 'Cascadia Code', 'Fira Code', 'JetBrains Mono', Consolas, monospace;
 }
 
-/* ── Container ──
-   The <pre> gets .not-prose so Typography won't touch it.
-   Default text color is #9cdcfe (cyan) — the VS Code color for
-   variables/identifiers, which Prism leaves as bare text. */
+/*
+The <pre> gets .not-prose so Typography won't touch it.
+Default text color is #9cdcfe (cyan) — the VS Code color for
+variables/identifiers, which Prism leaves as bare text. */
 #article-content pre[class*="language-"] {
   background: #1e1e1e;
   color: #9cdcfe;

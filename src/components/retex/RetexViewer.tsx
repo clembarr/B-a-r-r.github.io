@@ -1,7 +1,7 @@
 import { projects } from "../../assets/contents";
 import styles from '../../style';
 import DOMPurify from 'dompurify';
-import { adjustFontSize, getActiveBreakpoint, getLinkFromTypedLink, isOverflowing } from '../../utils/utils';
+import { adjustFontSize, getLinkFromTypedLink, isOverflowing } from '../../utils/utils';
 import { useContext, useCallback, useEffect, useRef, useState } from 'react';
 import { LangContext } from '../language';
 import { coreImages, menuIcons } from '../../assets';
@@ -34,8 +34,6 @@ const RetexViewer = () => {
 
     /** Maximum number of notions to display before truncating to prevent overflow. */
     const [maxNotions, setMaxNotions] = useState<number>(Infinity);
-
-    const isMobile = (getActiveBreakpoint('number') as number) < 2;
 
     const handleTextOverflow = useCallback(() => {
         if (specsContainer.current) {
@@ -181,8 +179,8 @@ const RetexViewer = () => {
     return (
         <div id={`retex-${displayedRetexTitle}`}
             className={`
-                ${isMobile ? "" : styles.sizeFull}
-                ${isMobile ? styles.flexCol : styles.flexRow}
+                md:w-full md:h-full
+                ${styles.flexColToRowAtMd}
                 p-[6%]
                 relative
                 md:overflow-hidden overflow-scroll
@@ -207,7 +205,7 @@ const RetexViewer = () => {
                     transition-all
                     duration-200
                     ease-in-out
-                    space-y-0
+                    space-y-4 md:space-y-0
                 `}
             >
                 {toggleGallery && relatedProject.content.images && relatedProject.content.images.length > 0
@@ -221,7 +219,7 @@ const RetexViewer = () => {
                             absolute
                             top-2
                             -right-6
-                            ${isMobile ? "hidden" : "flex"}
+                            hidden md:flex
                             items-center
                             justify-center
                             w-30
@@ -249,7 +247,7 @@ const RetexViewer = () => {
                         <p className={`
                                 ${styles.sizeFull}
                                 text-wrap
-                                ${isMobile ? "text-xs" : ""}
+                                text-xs md:text-base
                             `}
                             dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(translate(relatedProject.content.specs, currentLang))}}
                         />
@@ -260,7 +258,7 @@ const RetexViewer = () => {
                             w-full
                             md:h-fit h-full
                             md:max-h-[40%]
-                            ${isMobile ? styles.flexCol : styles.flexRow}
+                            ${styles.flexColToRowAtMd}
                             ${styles.contentCenter}
                             text-wrap
                             md:space-x-[3%] space-x-0
@@ -284,7 +282,7 @@ const RetexViewer = () => {
                                     list-disc
                                     list-inside
                                     space-y-[5%]
-                                    ${isMobile ? "text-2xs" : ""}
+                                    text-2xs md:text-base
                                 `}
                             >
                                 {displayedNotions.map((notion: string, index: number) => (
@@ -300,7 +298,7 @@ const RetexViewer = () => {
                                 relative
                                 ${styles.sizeFull}
                                 md:max-w-[44%]
-                                ${styles.flexCol}
+                                hidden md:flex md:flex-col
                                 ${styles.contentCenter}
                                 rounded-lg
                                 overflow-hidden
@@ -383,6 +381,21 @@ const RetexViewer = () => {
                     ${styles.flexCol}
                 `}
             >
+                {projectMedia.length > 0 && (
+                    <div id='retex-mobile-gallery'
+                        className={`
+                            flex flex-col md:hidden
+                            gap-2
+                            mt-4
+                            overflow-x-auto
+                        `}
+                    >
+                        {projectMedia.map((media, index) =>
+                            renderPreviewMedia(media, index, false, index === 0)
+                        )}
+                    </div>
+                )}
+
                 <ul id='retex-header-additional-ressources'
                     className={`
                         ${styles.sizeFull}
@@ -398,10 +411,10 @@ const RetexViewer = () => {
                             <li key={`retex-resource-${index}`}
                                 className={`
                                     ${styles.sizeFull}
-                                    ${isMobile ? styles.flexRow : "hidden"}
+                                    ${styles.flexRowHideDesktopAtMd}
                                     ${styles.contentStartX}
                                     space-x-[3%]
-                                    ${currentTheme === 'dark' ? 'text-(--color-tertiary)' : 'text-(--color-primary)'}
+                                    ${currentTheme === 'dark' ? 'text-(--color-tertiary)' : 'text-(--color-quaternary)'}
                                     transition-all
                                     duration-400
                                     ease-in-out

@@ -2,7 +2,6 @@ import styles from '../../style'
 import { ContactForm, SubmitEngine } from '../contact'
 import { SocialMedia } from '../../assets/dataTypes'
 import { socialMedia } from '../../assets/constants'
-import { getActiveBreakpoint } from '../../utils/utils'
 import { ThemeContext } from '../theme/ThemeEngine'
 import { useContext } from 'react'
 
@@ -20,14 +19,14 @@ const Contact = () => {
     <section id="contact"
       className={`
         ${styles.sizeFull}
-        ${getActiveBreakpoint('number') as number <= 1 ? `${styles.flexCol}` : `${styles.flexRow}`}
+        ${styles.flexColToRowAtMd}
         ${styles.contentCenter}
         xl:space-x-50 lg:space-x-37.5
       `}
     >
         <div id='form-container-desktop'
             className={`
-              ${getActiveBreakpoint('number') as number <= 1 ? `hidden` : `${styles.flexRow}`}
+              ${styles.flexRowHideAtMd}
               w-2/5
               h-full
               ${styles.contentCenter}
@@ -45,21 +44,22 @@ const Contact = () => {
               h-full
               ${styles.flexCol}
               ${styles.contentCenter}
-              lg:space-y-[35%] md:space-y-[50%] base:space-y-[15%]
+              space-y-[15%] md:space-y-[50%] lg:space-y-[35%]
+              order-last md:order-none
             `}
         >
           {socialMedia.map((social: SocialMedia) => (
             <div key={`icon-${social.label}-container`}
               className={`
-                ${getActiveBreakpoint('number') as number <= 1 ? `${styles.flexRow}` : `${styles.flexCol}`}
+                ${styles.flexRowToColAtMd}
                 ${styles.contentStartAll}
                 w-full
                 h-fit
-                md:space-y-[1%] base:space-y-[3%]
-                md:color-scheme-primary base:color-scheme-secondary
-                md:rounded-none base:rounded-lg
-                md:p-0 base:py-[3%] base:px-[5%]
-                md:shadow-none base:shadow-md
+                space-y-[3%] md:space-y-[1%]
+                md:color-scheme-primary
+                rounded-lg md:rounded-none
+                py-[3%] px-[5%] md:p-0
+                shadow-md md:shadow-none
               `}
             >
               <a href={social.link}
@@ -75,11 +75,12 @@ const Contact = () => {
                     className={`
                       object-cover
                       aspect-square
-                      md:w-[120%] base:w-[100%]
+                      w-full md:w-[120%]
                     `}
                 />
               </a>
               <hr className={`
+                  hidden md:block
                   ${styles.line}
                   w-[20%]
                   h-[2.5px]
@@ -87,14 +88,12 @@ const Contact = () => {
               />
 
               <div className={`
-                  ${getActiveBreakpoint('number') as number <= 1 ?
-                    `${styles.flexCol}` : `hidden`
-                  }
+                  ${styles.flexColHideAtMd}
                   ${styles.contentStartX}
                 `}
               >
                 <label className={`
-                  md:text-base base:text-xs
+                  text-xs md:text-base
                   w-full
                   ${styles.contentStartX}
                 `}
@@ -102,8 +101,8 @@ const Contact = () => {
               </div>
 
               <label className={`
-                  md:visible base:hidden
-                  md:text-base base:text-xs
+                  hidden md:block
+                  md:text-base text-xs
                   w-full
                   ${styles.contentStartX}
                 `}
@@ -119,6 +118,7 @@ const Contact = () => {
               h-full
               ${styles.contentCenter}
               overflow-hidden
+              order-first md:order-none
             `}
         >
           <ContactForm />

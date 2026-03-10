@@ -34,7 +34,7 @@ const SwitchButton = () => {
         z-10
         relative
         cursor-pointer
-        p-1.5
+        p-1 md:p-1.5
         rounded-full
         transition-all
         duration-300
@@ -48,7 +48,7 @@ const SwitchButton = () => {
       <div id="switch-track"
         className={`
           relative
-          h-7 w-14
+          h-5 w-10 md:h-7 md:w-14
           rounded-full
           transition-all
           duration-500
@@ -78,12 +78,12 @@ const SwitchButton = () => {
             absolute
             top-1/2
             -translate-y-1/2
-            w-5 h-5
+            w-3.5 h-3.5 md:w-5 md:h-5
             rounded-full
             transition-all
             duration-500
             ease-(--ease-bounce)
-            ${isDark ? 'translate-x-8' : 'translate-x-1'}
+            ${isDark ? 'translate-x-5 md:translate-x-8' : 'translate-x-1'}
             ${isDark ? 'bg-(--color-tertiary)' : 'bg-(--color-quinary)'}
             shadow-[0_0_12px_var(--color-tertiary)]/40
           `}

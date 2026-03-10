@@ -4,7 +4,7 @@ import { projects } from "../../assets/contents"
 import styles from "../../style"
 import { coreImages, menuIcons } from "../../assets"
 import { cloneElement, ReactElement, useContext, useEffect, useRef, useState } from "react"
-import { getActiveBreakpoint, randomNumberBetween } from "../../utils/utils"
+import { randomNumberBetween } from "../../utils/utils"
 import { ProjectCard } from "../cards"
 import { ThemeContext } from "../theme/ThemeEngine"
 import { LangContext } from "../language"
@@ -155,8 +155,8 @@ const ProjectsSlider = () => {
     <section id='projects-slider'
       className={`
         relative
-        ${styles.sizeScreen}
-        max-h-[70vh]
+        w-full h-[60vh] md:h-screen
+        md:max-h-[70vh] min-h-[350px]
         ${styles.flexRow}
         ${styles.contentCenter}
         lg:space-x-[10%]
@@ -243,7 +243,7 @@ const ProjectsSlider = () => {
       <div id="image-container"
         className={`
           ${styles.sizeFull}
-          ${getActiveBreakpoint('number') as number <= 2 ? "hidden" : styles.flexCol}
+          ${styles.hiddenToFlexColAtLg}
           ${styles.contentCenter}
           relative
           overflow-y-visible
@@ -256,7 +256,7 @@ const ProjectsSlider = () => {
               object-contain
               2xl:w-[80%] xl:w-[88%]
               absolute
-              2xl:left-[3%] base:left-0
+              left-0 2xl:left-[3%]
               ${currentTheme === "dark" ? "-bottom-10" : ""}
             `}
           />

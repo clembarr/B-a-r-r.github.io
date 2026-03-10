@@ -3,7 +3,7 @@ import { navLinks } from "../assets/constants";
 import DropdownLang from "./dropdowns/DropdownLang";
 import SwitchButton from "./theme/SwitchButton";
 import styles from "../style";
-import { getActiveBreakpoint, getCurrentNavigation, getLinkFromTypedLink } from "../utils/utils";
+import { getCurrentNavigation, getLinkFromTypedLink } from "../utils/utils";
 import { Link } from "react-router";
 import { LangContext } from "./language";
 import { menuIcons } from "../assets";
@@ -79,7 +79,7 @@ const Navbar = () => {
         w-screen
         items-center
         px-[5%]
-        xl:py-1 lg:py-2.5 py-2
+        2xl:py-1.5 xl:py-3 lg:py-2.5 md:py-1 py-2
         ${styles.flexRow}
         ${styles.contentStartX}
         bg-(--color-navbar-bg)/95
@@ -148,7 +148,7 @@ const Navbar = () => {
         className={`
           ${styles.sizeFull}
           ${styles.flexRow}
-          ${getActiveBreakpoint('number') as number < 3 ? styles.contentStartX : styles.contentEndX}
+          justify-start items-center lg:justify-end
           font-primary-regular
           space-x-4
         `}
@@ -163,11 +163,9 @@ const Navbar = () => {
       <div id="burger-container"
         className={`
           ${styles.sizeFull}
-          min-h-15
+          md:min-h-15 min-h-9
           ${styles.contentEndX}
-          ${getActiveBreakpoint('number') as number < 3 ?
-            `${styles.flexRow}` : `hidden`
-          }
+          flex flex-row lg:hidden
           relative
           mr-[3%]
         `}

@@ -25,8 +25,7 @@ const Layout = ({children}: {children: ReactNode}) => {
 
     return (
         <div id='app-container'
-            className=
-            {`
+            className={`
                 ${styles.page}
                 ${styles.flexCol}
                 relative
@@ -57,8 +56,7 @@ const Layout = ({children}: {children: ReactNode}) => {
             > <Navbar /> </div>
 
             <div id='app-content-container'
-                className=
-                {`
+                className={`
                     ${styles.flexCol}
                     ${styles.sizeFull}
                     bg-(--color-layout-bg)

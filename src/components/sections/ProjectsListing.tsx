@@ -8,7 +8,7 @@ import Sortingbar from "../search/Sortingbar";
 import { Retex } from "../../assets/dataTypes";
 import { LangContext } from "../language";
 import { RetexViewer, RetexContext } from "../retex";
-import { getActiveBreakpoint, randomNumberBetween } from "../../utils/utils";
+import { randomNumberBetween } from "../../utils/utils";
 import { noDataMessages, sortOptions, PROJECTS_LISTING_PERSPECTIVE } from "../../assets/constants";
 import { ThemeContext } from "../theme/ThemeEngine";
 import { ScrollReveal } from "../animations";
@@ -139,7 +139,7 @@ const ProjectsListing = () => {
                 className={`
                     w-full
                     h-fit
-                    ${getActiveBreakpoint("number") as number > 1 ? styles.flexRow + " gap-36" : styles.flexCol}
+                    ${styles.flexColToRowAtMd} md:gap-36
                     ${styles.contentCenter}
                 `}
             >
@@ -164,7 +164,7 @@ const ProjectsListing = () => {
                 left-0
                 backdrop-blur-md
                 bg-transparent
-                ${getActiveBreakpoint('number') as number < 2 ? "overflow-scroll" : ""}
+                overflow-auto md:overflow-hidden
             `}
             style={{
                 animation: "fade-in 0.3s ease-in-out",

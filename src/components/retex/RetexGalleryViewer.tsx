@@ -2,7 +2,6 @@ import { useContext, useEffect, useRef, useState } from "react";
 import styles from "../../style";
 import { menuIcons } from "../../assets";
 import { ThemeContext } from "../theme/ThemeEngine";
-import { getActiveBreakpoint } from "../../utils/utils";
 import { galleryControls, GALLERY_HINTS_DELAY_MS } from "../../assets/constants";
 import { GalleryAction, ProjectMedia } from "../../assets/dataTypes";
 import { motion } from "framer-motion";
@@ -102,7 +101,7 @@ const RetexGalleryViewer = ({images, untoggler}: RetexGalleryViewerProps) => {
             <div id="gallery-focused-image-container"
                 className={`
                     ${styles.sizeFull}
-                    ${getActiveBreakpoint('number') as number < 2 ? "hidden" : styles.flexCol}
+                    ${styles.hiddenToFlexColAtMd}
                     ${styles.contentCenter}
                     transition-all
                     duration-300
@@ -160,7 +159,7 @@ const RetexGalleryViewer = ({images, untoggler}: RetexGalleryViewerProps) => {
             <nav id="gallery-navigation"
                 className={`
                     absolute
-                    ${getActiveBreakpoint('number') as number < 2 ? "hidden" : styles.flexCol}
+                    ${styles.hiddenToFlexColAtMd}
                     ${styles.contentCenter}
                     overflow-x-scroll
                     overflow-y-hidden
@@ -229,7 +228,7 @@ const RetexGalleryViewer = ({images, untoggler}: RetexGalleryViewerProps) => {
             <div id="gallery-mobile"
                 className={`
                     ${styles.sizeFull}
-                    ${getActiveBreakpoint('number') as number < 2 ? styles.flexCol : "hidden"}
+                    ${styles.flexColHideAtMd}
                     space-y-[5%]
                     pt-6.25
                 `}

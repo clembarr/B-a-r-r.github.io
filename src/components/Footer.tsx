@@ -1,6 +1,6 @@
 import styles from "../style"
 import { copyrigthText, navLinks } from "../assets/constants"
-import { getActiveBreakpoint, getCurrentNavigation, getLinkFromTypedLink, shuffle } from "../utils/utils"
+import { getCurrentNavigation, getLinkFromTypedLink, shuffle } from "../utils/utils"
 import { useContext, useEffect, useState } from "react"
 import { footerColumns } from "../assets/contents"
 import DOMPurify from "dompurify"
@@ -155,7 +155,7 @@ const Footer = () => {
           h-full
           w-full
           ${styles.contentStartAll}
-          ${getActiveBreakpoint('number') as number <= 2 ? styles.flexCol : styles.flexRow}
+          ${styles.flexColToRowAtLg}
           text-2xs
           xl:space-x-25 lg:space-x-12.5
           lg:space-y-0 space-y-[3%]
@@ -191,7 +191,7 @@ const Footer = () => {
       <div id="copyrigth-container"
         className={`
           ${styles.flexRow}
-          ${getActiveBreakpoint('number') as number <= 2 ? styles.contentStartX : styles.contentEndAll}
+          justify-start items-center lg:justify-end lg:items-end
           ${styles.sizeFull}
           self-end
           pt-4
@@ -203,7 +203,7 @@ const Footer = () => {
         <a id="copyrigth"
           href={getLinkFromTypedLink(copyrigthText.link, currentLang)}
           className={`
-            ${getActiveBreakpoint('number') as number <= 2 ? "text-left" : "text-right"}
+            text-left lg:text-right
             text-3xs
             text-(--color-muted)
             hover:text-(--color-tertiary)

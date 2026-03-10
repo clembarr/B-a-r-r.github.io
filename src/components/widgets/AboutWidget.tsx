@@ -81,7 +81,7 @@ const AboutWidget = ({ id, title, content, titleAdditionnalStyle, contentStyle, 
         <div id={`about-widget-${id}`}
             className={`
                 ${styles.widgetCard}
-                px-6 py-4
+                px-3 py-2 md:px-6 md:py-4
                 h-full
                 shadow-md
                 ${additionalTopStyles}

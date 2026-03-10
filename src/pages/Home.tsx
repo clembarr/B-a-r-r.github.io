@@ -28,14 +28,14 @@ const Home = () => {
       className={`
         ${styles.page}
         ${styles.flexCol}
-        2xl:space-y-[10%] xl:space-y-[18%] lg:space-y-[18%] hxs:space-y-20 space-y-2
+        2xl:space-y-[12%] xl:space-y-[17%] lg:space-y-[10%] md:space-y-[20%] sm:space-y-[17%] ss:space-y-[10%] space-y-10
         lg:pb-25
       `}
     >
       <div id="hero-container"
         className={`
           w-screen
-          2xl:h-[74vh] lg:h-[62vh] md:h-[40vh] h-[35vh]
+          2xl:h-[74vh] xl:h-[68vh] lg:h-[62vh] md:h-[40vh] h-[35vh]
           px-[12%]
           text-(--color-quaternary)
           bg-transparent

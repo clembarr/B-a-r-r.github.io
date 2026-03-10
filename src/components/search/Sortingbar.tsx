@@ -193,12 +193,12 @@ const SortingBar = ({ options, maxPills = 4 }: SortingBarProps) => {
             )}
 
             <div id="dropdown-sort-container"
-                className=  
+                className=
                 {`
                     ${styles.sizeFit}
                     ${styles.flexRow}
                     ${styles.contentStartX}
-                    ml-6
+                    md:ml-6
                 `}
             >
                 <DropdownSort alreadyDisplayedItems={alreadyDisplayedItems} options={options} />

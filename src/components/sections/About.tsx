@@ -6,7 +6,7 @@ import { useCallback, useContext, useEffect, useMemo, useRef } from "react"
 import { Link } from "react-router"
 import { LangContext } from "../language"
 import { ThemeContext } from "../theme/ThemeEngine"
-import { adjustFontSize, getActiveBreakpoint, getLinkFromTypedLink, isOverflowing } from "../../utils/utils"
+import { adjustFontSize, getLinkFromTypedLink, isOverflowing } from "../../utils/utils"
 import { aboutLinks } from "../../assets/constants"
 import AboutWidget from "../widgets/AboutWidget"
 import { LanguageLevel } from "../../assets/dataTypes"
@@ -67,8 +67,9 @@ const About = () => {
             `}
           > {content} </ul>
         )}
-        titleAdditionnalStyle="text-lg font-bold mb-4"
+        titleAdditionnalStyle="text-sm md:text-lg font-bold mb-2 md:mb-4"
         additionalTopStyles={`${styles.flexCol}`}
+        contentStyle="text-2xs ss:text-xs md:text-sm"
       />
     );
   }, [currentLang]);
@@ -84,7 +85,8 @@ const About = () => {
         id={widget.id}
         title={widget.title[currentLang]}
         content={content}
-        titleAdditionnalStyle="text-lg font-bold mb-4"
+        titleAdditionnalStyle="text-sm md:text-lg font-bold mb-2 md:mb-4"
+        contentStyle="text-xs md:text-sm"
         additionalTopStyles={`${styles.flexCol}`}
       />
     );
@@ -107,8 +109,8 @@ const About = () => {
         id={widget.id}
         title={widget.title[currentLang]}
         content={(<p dangerouslySetInnerHTML={{__html: DOMPurify.sanitize((widget.content as MultilingualContent)[currentLang])}} />)}
-        titleAdditionnalStyle="text-lg font-bold mb-2"
-        contentStyle=""
+        titleAdditionnalStyle="text-sm md:text-lg font-bold mb-2"
+        contentStyle="text-2xs ss:text-sm md:text-sm"
         additionalTopStyles={`${styles.flexCol}`}
       />
     );
@@ -127,14 +129,14 @@ const About = () => {
     <section id="about"
       className={`
         ${styles.sizeFull}
-        ${getActiveBreakpoint('number') as number <= 1 ? styles.flexCol : styles.flexRow}
+        ${styles.flexColToRowAtMd}
         ${styles.contentStartY}
         overflow-hidden
       `}
     >
       <div id="left-side-container"
         className={`
-          ${getActiveBreakpoint('number') as number <= 2 ? "hidden" : styles.flexCol}
+          ${styles.hiddenToFlexColAtLg}
           w-5/12
           h-fit
           relative
@@ -200,17 +202,17 @@ const About = () => {
         <h2 dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(bioText.find((e) => e.active)!.title[currentLang])}}
           className={`
             font-primary-bold
-            2xl:text-3xl xl:text-2xl lg:text-xl md:text-xl text-md
-            xl:leading-8 base:leading-6
+            2xl:text-3xl xl:text-2xl lg:text-xl md:text-xl ss:text-lg text-md
+            leading-6 xl:leading-8
             w-full
-            tracking-wider
+            md:tracking-wider tracking-normal
             xl:mb-6 lg:mb-6 mb-4
             text-(--color-quaternary)
           `}
         />
 
         <div className={`
-            ${styles.flexCol} md:${styles.flexRow}
+            ${styles.flexColToRowAtMd}
             w-full
             xl:gap-5 lg:gap-4 gap-3
           `}
@@ -226,8 +228,8 @@ const About = () => {
                 dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(aboutSection.content[currentLang])}}
                 className={`
                   font-primary-regular
-                  2xl:text-lg xl:text-lg md:text-md base:text-2xs
-                  leading-[145%] base:leading-[140%]
+                  text-xs ss:text-base md:text-md xl:text-lg 2xl:text-lg
+                  leading-[140%] md:leading-[145%]
                   tracking-wide
                   text-wrap
                   whitespace-pre-line
@@ -251,7 +253,7 @@ const About = () => {
           <div id='first-row'
             className={`
               w-full
-              grid grid-cols-2
+              grid grid-cols-1 md:grid-cols-2
               gap-4
             `}
           >
@@ -262,7 +264,7 @@ const About = () => {
           <div id='second-row'
             className={`
               w-full
-              grid grid-cols-[1.2fr_1fr_1fr]
+              grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1.2fr_1fr_1fr]
               gap-4
               shadow-lg
               pb-2
@@ -277,8 +279,7 @@ const About = () => {
 
       <span id="portrait-container-mobile"
         className={`
-          ${getActiveBreakpoint('number') as number < 1 ? styles.flexCol : "hidden"}
-          sm:ss:hidden
+          hidden
           w-full
           h-fit
           ${styles.contentCenter}

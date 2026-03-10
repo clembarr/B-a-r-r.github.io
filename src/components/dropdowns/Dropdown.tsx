@@ -81,7 +81,7 @@ const Dropdown = ({items, animationStyle, menuState, itemState, additionalStyles
                     z-10
                     absolute
                     px-4
-                    2xl:pb-1       
+                    pb-1    
                     2xl:pt-2 pt-1
                     bg-(--color-secondary)
                     rounded-md

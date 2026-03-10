@@ -19,7 +19,7 @@ const styles = {
   heading2: `
     font-primary-bold
     2xl:text-3xl xl:text-2xl lg:text-xl md:text-xl text-md
-    xl:leading-8 base:leading-6
+    leading-6 xl:leading-8
     w-full
     tracking-wider
     xl:mb-9 lg:mb-6 mb-4
@@ -40,8 +40,8 @@ const styles = {
 
   paragraph: `
     font-primary-regular
-    2xl:text-xl xl:text-lg md:text-md base:text-2xs
-    leading-[145%] base:leading-[140%]
+    text-2xs md:text-md xl:text-lg 2xl:text-xl
+    leading-[140%] md:leading-[145%]
     tracking-wide
     text-wrap
     whitespace-pre-line`,
@@ -56,6 +56,19 @@ const styles = {
   flexCol: `flex flex-col`,
   flexRow: `flex flex-row`,
   flexWrap: `flex flex-wrap`,
+
+  // Responsive flex direction (col → row at breakpoint)
+  flexColToRowAtMd: `flex flex-col md:flex-row`,
+  flexColToRowAtLg: `flex flex-col lg:flex-row`,
+  flexRowToColAtMd: `flex flex-row md:flex-col`,
+
+  // Responsive visibility + flex
+  hiddenToFlexColAtMd: `hidden md:flex md:flex-col`,
+  hiddenToFlexColAtLg: `hidden lg:flex lg:flex-col`,
+  flexRowHideAtMd: `hidden md:flex md:flex-row`,
+  flexRowHideDesktopAtMd: `flex flex-row md:hidden`,
+  flexColHideAtSm: `flex flex-col sm:hidden`,
+  flexColHideAtMd: `flex flex-col md:hidden`,
 
   contentCenter: `justify-center items-center`,
   contentStartAll: `justify-start items-start`,
@@ -243,7 +256,7 @@ const styles = {
   `,
 
   widgetCard: `
-    px-4 py-3cc
+    px-4 py-3
     rounded-md
     bg-(--color-secondary)
     border border-(--color-tertiary)/15
