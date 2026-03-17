@@ -135,7 +135,7 @@ export const generateProjectSchema = (project: {
 });
 
 export const BlogSEOConstants: SEOConstants = {
-  title: `Blog - ${author.firstName} ${author.lastName}`,
+  title: `clembarr.dev - Blog`,
   description: "Thoughts on software development, research, algorithms, and technology.",
   keywords: ['Blog', 'Software Development', 'AI', 'Algorithms', 'Research', 'Porfolio'],
   ogUrl: `${APP_URL}/blog`,
@@ -143,7 +143,7 @@ export const BlogSEOConstants: SEOConstants = {
 }
 
 export const ProjectSEOConstants: SEOConstants = {
-  title: `Projets - ${author.firstName} ${author.lastName}`,
+  title: `clembarr.dev - Projects`,
   description: "Découvrez les projets de Clément Barrière : développement web, intelligence artificielle, algorithmes et plus.",
   keywords: ['projets', 'projects', 'développement', 'software', 'AI', 'algorithms'],
   ogUrl: `${APP_URL}/projects`,
@@ -151,8 +151,8 @@ export const ProjectSEOConstants: SEOConstants = {
 }
 
 export const HomeSEOConstants: SEOConstants = {
-  title: `${author.firstName} ${author.lastName} - Portfolio`,
-  description: "Portfolio de Clément Barrière - Développeur logiciel & chercheur. Projets, compétences et parcours.",
+  title: `clembarr.dev - Welcome`,
+  description: "Portfolio de Clément Barrière - Développeur logiciel, chercheur et ingénieur en IA et modélisation. Projets, compétences et parcours.",
   keywords: ['portfolio', 'développeur', 'software developer', 'researcher', 'Clément Barrière'],
   ogUrl: `${APP_URL}`,
   canonical: `${APP_URL}`,
