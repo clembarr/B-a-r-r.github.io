@@ -247,7 +247,7 @@ const RetexViewer = () => {
                         <p className={`
                                 ${styles.sizeFull}
                                 text-wrap
-                                lg:text-sm md:text-md sm:text-md text-xs
+                                xl:text-base lg:text-sm md:text-md sm:text-md text-xs
                                 text-justify
                             `}
                             dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(translate(relatedProject.content.specs, currentLang))}}
@@ -263,7 +263,7 @@ const RetexViewer = () => {
                             ${styles.contentCenter}
                             text-wrap
                             md:space-x-[3%] space-x-0
-                            lg:mt-3 mt-6
+                            xl:mt-0 lg:mt-3 mt-6
                         `}
                     >
                         <span id='notions'
