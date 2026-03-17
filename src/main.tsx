@@ -25,7 +25,7 @@ if ('serviceWorker' in navigator) {
 }
 
 createRoot(document.getElementById('root')!).render(
-  <BrowserRouter>
+  <BrowserRouter basename="/clembarr.dev">
     <LangEngine>
       <ThemeEngine>
         <FlashsEngine>
