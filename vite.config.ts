@@ -42,16 +42,21 @@ export default defineConfig({
         ]
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,svg}'],
+        globPatterns: ['**/*.{js,css,html,ico,svg,pdf}'],
+        navigateFallbackDenylist: [/\.pdf$/],
         maximumFileSizeToCacheInBytes: 10 * 1024 * 1024, // 10 MB
         runtimeCaching: [
+          {
+            urlPattern: /\.(?:mp4|webm|ogg)$/i,
+            handler: 'NetworkOnly',
+          },
           {
             urlPattern: /\.(?:png|jpg|jpeg|webp)$/,
             handler: 'CacheFirst',
             options: {
               cacheName: 'images-cache',
               expiration: {
-                maxEntries: 50,
+                maxEntries: 150,
                 maxAgeSeconds: 60 * 60 * 24 * 30 // 30 days
               }
             }
