@@ -10,8 +10,8 @@ import { projectsImages, documents } from '../index';
 
 export const eewAnalyzer: Retex = {
   title: {
-    [UNIVERSAL_LANG]: "EEW Analyzer",
-    fr: "Modélisation EEW",
+    [UNIVERSAL_LANG]: "LLM as a Judge",
+    fr: "LLM as a Judge",
   },
   coverImage: projectsImages.eew_basic_visuals,
   date: new Date(2025, 5),
